@@ -1,0 +1,131 @@
+/* map-pins.css */
+
+/* Container for the marker to ensure positioning is correct */
+.custom-map-marker {
+    position: relative;
+    /* Center the marker point */
+    width: 0;
+    height: 0;
+}
+
+/* 
+   SIMPLE PIN (Zoomed Out)
+   A small pin or dot.
+*/
+.pin-simple {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230d2c52'%3E%3Cpath d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 10;
+}
+
+/* 
+   DETAILED PIN (Zoomed In)
+   A large card-like bubble with profile picture.
+*/
+.pin-detailed {
+    position: absolute;
+    bottom: 15px;
+    /* Offset to sit above the point */
+    left: 50%;
+    transform: translateX(-50%) scale(0.8);
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+    /* Blue gradient approach as per Figma check */
+    color: white;
+    padding: 8px 12px;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    /* Not clickable when hidden */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    min-width: 180px;
+    z-index: 20;
+}
+
+/* Triangle/Arrow for the bubble */
+.pin-detailed::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px 8px 0;
+    border-style: solid;
+    border-color: #0984e3 transparent transparent transparent;
+}
+
+.pin-detailed img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid white;
+    object-fit: cover;
+}
+
+.pin-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.pin-name {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+.pin-role {
+    font-size: 11px;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+.pin-action {
+    font-size: 10px;
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+/* 
+   STATE TOGGLING
+   The .map-zoom-high class is added to the #map container via JS.
+*/
+
+/* Default State (Zoomed Out): Show Simple, Hide Detailed */
+.pin-simple {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+.pin-detailed {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5);
+    pointer-events: none;
+}
+
+/* Zoomed In State: Hide Simple, Show Detailed */
+.zoom-high .pin-simple {
+    opacity: 0;
+    transform: translateX(-50%) scale(0);
+    pointer-events: none;
+}
+
+.zoom-high .pin-detailed {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    pointer-events: auto;
+    cursor: pointer;
+}

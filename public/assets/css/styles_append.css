@@ -1,0 +1,364 @@
+/* assets/css/style.css - Append Request and Badge Styles */
+/* Reuse existing root variables */
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    color: #fff;
+}
+
+.badge-pending {
+    background-color: #ffc107;
+    color: #212529;
+    /* Dark text for yellow background */
+}
+
+.badge-accepted {
+    background-color: var(--accent-green);
+}
+
+.badge-declined {
+    background-color: #dc3545;
+}
+
+.badge-completed {
+    background-color: var(--accent-blue);
+}
+
+.badge-cancelled {
+    background-color: #6c757d;
+}
+
+/* Request Cards */
+.request-card {
+    background: var(--white);
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-left: 4px solid transparent;
+    /* For status indication */
+}
+
+.request-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.request-card.pending {
+    border-left-color: #ffc107;
+}
+
+.request-card.accepted {
+    border-left-color: var(--accent-green);
+}
+
+.request-card.declined {
+    border-left-color: #dc3545;
+}
+
+.request-card.completed {
+    border-left-color: var(--accent-blue);
+}
+
+.request-card.cancelled {
+    border-left-color: #6c757d;
+}
+
+.request-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.request-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.request-meta {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.request-meta i {
+    color: var(--accent-blue);
+    width: 20px;
+    /* Fixed width for alignment */
+    text-align: center;
+}
+
+.request-notes {
+    background-color: #f8f9fa;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #555;
+    margin-top: 15px;
+    border-left: 3px solid #e9ecef;
+}
+
+.request-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* Custom Table for History */
+.custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.custom-table thead {
+    background-color: #f8f9fa;
+    color: var(--primary-color);
+}
+
+.custom-table th,
+.custom-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.custom-table tr:last-child td {
+    border-bottom: none;
+}
+
+.custom-table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+/* Professional Payment Modals */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(13, 44, 82, 0.4);
+    /* Darker blue overlay */
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    /* Reduced from 24px */
+    width: 90%;
+    max-width: 440px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e1e4e8;
+    animation: modalScaleIn 0.3s ease-out;
+}
+
+@keyframes modalScaleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.modal-text {
+    color: #55606e;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+/* GCash Sample Screen - Professional Refinement */
+.gcash-container {
+    background: #fff;
+    color: #333;
+    border-radius: 16px;
+    /* Reduced from 30px */
+    overflow: hidden;
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    position: relative;
+    border: 1px solid #cbd5e0;
+    /* Thin border instead of thick bezel */
+}
+
+.gcash-status-bar {
+    height: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 20px 0;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    background: #007dfe;
+}
+
+.gcash-header {
+    background: #007dfe;
+    padding: 25px 20px 30px;
+    text-align: center;
+}
+
+.gcash-logo {
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: #fff;
+    letter-spacing: -0.5px;
+    margin-bottom: 0;
+}
+
+.gcash-subtitle {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.gcash-body {
+    padding: 30px;
+    background: #fff;
+    min-height: 180px;
+}
+
+.gcash-info-row {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #edf2f7;
+    padding-bottom: 12px;
+}
+
+.gcash-label {
+    font-size: 0.7rem;
+    color: #718096;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.gcash-value {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #1a202c;
+}
+
+.btn-gcash {
+    background: #007dfe;
+    color: #fff;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    /* Reduced from 50px */
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-gcash:hover {
+    background: #006ae6;
+}
+
+.btn-gcash-back {
+    background: transparent;
+    border: none;
+    color: #a0aec0;
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.btn-gcash-back:hover {
+    color: #4a5568;
+}
+
+.btn-modern {
+    padding: 10px 24px;
+    border-radius: 6px;
+    /* Reduced from 12px */
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.btn-yes {
+    background: var(--primary-color);
+    /* Use deeper primary color instead of bright blue */
+    color: white;
+}
+
+.btn-not-yet {
+    background: #fff;
+    color: #4a5568;
+    border-color: #e2e8f0;
+}
+
+.btn-yes:hover {
+    background: #163e73;
+}
+
+.btn-not-yet:hover {
+    background: #f7fafc;
+    border-color: #cbd5e0;
+}

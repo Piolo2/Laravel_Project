@@ -61,6 +61,13 @@
                     Skills & Categories
                 </a>
             </li>
+            <li>
+                <a href="{{ route('admin.announcements.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.announcements.*') ? 'active' : '' }}">
+                    <i class="bi bi-megaphone me-2"></i>
+                    Announcements
+                </a>
+            </li>
         </ul>
         <hr>
         <div class="dropdown">

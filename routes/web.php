@@ -12,6 +12,7 @@ use App\Http\Controllers\VerificationController;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/announcement/{id}', [HomeController::class, 'showAnnouncement'])->name('announcement.show');
 Route::get('/api/markers', [SearchController::class, 'getMarkers'])->name('api.markers');
 
 // Auth Routes
@@ -71,6 +72,16 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/admin/skills/{id}', [\App\Http\Controllers\Admin\AdminSkillController::class, 'update'])->name('admin.skills.update');
     Route::delete('/admin/skills/{id}', [\App\Http\Controllers\Admin\AdminSkillController::class, 'destroy'])->name('admin.skills.destroy');
     Route::post('/admin/categories', [\App\Http\Controllers\Admin\AdminSkillController::class, 'storeCategory'])->name('admin.categories.store');
+
+    // Admin Announcements
+    Route::resource('/admin/announcements', \App\Http\Controllers\Admin\AdminAnnouncementController::class)->names([
+        'index' => 'admin.announcements.index',
+        'create' => 'admin.announcements.create',
+        'store' => 'admin.announcements.store',
+        'edit' => 'admin.announcements.edit',
+        'update' => 'admin.announcements.update',
+        'destroy' => 'admin.announcements.destroy',
+    ]);
     // Service Provider Verification
     Route::get('/verification', [VerificationController::class, 'show'])->name('verification.show');
     Route::post('/verification', [VerificationController::class, 'store'])->name('verification.store');

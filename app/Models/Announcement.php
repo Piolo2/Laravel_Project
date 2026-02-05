@@ -17,6 +17,6 @@ class Announcement extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('deadline', '>=', now()->toDateString());
+        return $query->where('deadline', '>', now()->toDateString());
     }
 }

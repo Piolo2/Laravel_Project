@@ -4,116 +4,155 @@
 
 @section('content')
     <div class="container requests-container">
-        <h2 style="color: var(--primary-color); margin-bottom: 2rem;">My Service Requests</h2>
+        <div class="section-title text-center" style="margin-bottom: 3rem;">
+            <h2 style="font-weight: 800; color: var(--primary-color);">My Service Requests</h2>
+            <p class="text-muted">Manage your service appointments and history</p>
+        </div>
 
         <div id="alert-container">
             @if (session('msg'))
-                <div class="alert alert-success">{{ session('msg') }}</div>
+                <div class="alert alert-success shadow-sm border-0">{{ session('msg') }}</div>
             @endif
             @if (session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
+                <div class="alert alert-danger shadow-sm border-0">{{ session('error') }}</div>
             @endif
         </div>
 
-        <!-- Ongoing Requests -->
-        <div style="margin-top: 30px;">
-            <h3 style="color: var(--primary-color); font-size: 1.4rem;"><i class="fas fa-hammer"
-                    style="color: var(--accent-blue);"></i> Ongoing / Accepted Requests</h3>
+        <!-- Ongoing / Accepted Requests -->
+        <div class="mb-5">
+            <h4 class="mb-4" style="color: var(--primary-color); font-weight: 700;">
+                <i class="fas fa-hammer me-2" style="color: var(--accent-blue);"></i> Ongoing / Accepted
+            </h4>
 
             @if (count($active_requests) > 0)
-                <div style="margin-top: 15px;">
+                <div class="requests-grid">
                     @foreach ($active_requests as $req)
-                        <div class="request-card accepted" id="request-{{ $req->id }}">
-                            <div class="request-header">
-                                <h4 class="request-title">Service with {{ $req->provider_name }}</h4>
-                                <span class="badge badge-accepted">Accepted</span>
+                        <div class="request-card-minimal accepted" id="request-{{ $req->id }}">
+                            <div class="header">
+                                <h5 class="title">Service with {{ $req->provider_name }}</h5>
+                                <span class="badge-minimal accepted">Accepted</span>
                             </div>
-                            <div class="request-meta">
-                                <i class="fas fa-calendar-alt"></i> <strong>Date:</strong>
-                                {{ \Carbon\Carbon::parse($req->service_date)->format('F j, Y, g:i a') }}
-                            </div>
-                            <div class="request-meta">
-                                <i class="fas fa-phone"></i> <strong>Contact:</strong>
-                                {{ $req->provider_contact }}
+                            <div class="meta-grid">
+                                <div class="meta-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>{{ \Carbon\Carbon::parse($req->service_date)->format('F j, Y, g:i a') }}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>{{ $req->provider_contact }}</span>
+                                </div>
                             </div>
                             @if (!empty($req->notes))
-                                <div class="request-notes">
+                                <div class="notes">
                                     <strong>Your Note:</strong><br>
                                     {!! nl2br(e($req->notes)) !!}
                                 </div>
                             @endif
-                            <div class="request-actions">
-                                <button type="button" class="btn btn-accent btn-sm"
-                                    onclick="updateStatus({{ $req->id }}, 'Completed')">
-                                    <i class="fas fa-check"></i> Done
-                                </button>
-                                <button type="button" class="btn btn-outline-danger btn-sm"
+                            <div class="actions">
+                                <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-4"
                                     onclick="updateStatus({{ $req->id }}, 'Cancelled')">
-                                    <i class="fas fa-times"></i> Not Completed
+                                    Not Completed
+                                </button>
+                                <button type="button" class="btn btn-accent btn-sm rounded-pill px-4"
+                                    onclick="updateStatus({{ $req->id }}, 'Completed')">
+                                    Mark as Done
                                 </button>
                             </div>
                         </div>
                     @endforeach
                 </div>
             @else
-                <p
-                    style="padding: 40px; background: #fff; border-radius: 8px; border: 1px dashed #ccc; text-align:center; color:#888;">
-                    No active requests at the moment.</p>
+                <div class="text-center py-5 rounded-3" style="background: #f8f9fa; border: 1px dashed #dee2e6;">
+                    <p class="text-muted mb-0">No active requests at the moment.</p>
+                </div>
             @endif
         </div>
 
         <!-- Pending Requests -->
-        <div style="margin-top: 40px;">
-            <h3 style="color: var(--primary-color); font-size: 1.4rem;"><i class="fas fa-clock" style="color: #ffc107;"></i>
-                Pending Requests</h3>
+        <div class="mb-5">
+            <h4 class="mb-4" style="color: var(--primary-color); font-weight: 700;">
+                <i class="fas fa-clock me-2" style="color: #ffc107;"></i> Pending Requests
+            </h4>
             @if (count($pending_requests) > 0)
-                <div style="margin-top: 15px;">
+                <div class="requests-grid">
                     @foreach ($pending_requests as $req)
-                        <div class="request-card pending" id="request-{{ $req->id }}">
-                            <div class="request-header">
-                                <h4 class="request-title">Service with {{ $req->provider_name }}</h4>
-                                <span class="badge badge-pending">Waiting for response</span>
+                        <div class="request-card-minimal pending" id="request-{{ $req->id }}">
+                            <div class="header">
+                                <h5 class="title">Service with {{ $req->provider_name }}</h5>
+                                <span class="badge-minimal pending">Waiting for response</span>
                             </div>
-                            <div class="request-meta">
-                                <i class="fas fa-calendar-alt"></i> <strong>Date:</strong>
-                                {{ \Carbon\Carbon::parse($req->service_date)->format('F j, Y, g:i a') }}
+                            <div class="meta-grid">
+                                <div class="meta-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>{{ \Carbon\Carbon::parse($req->service_date)->format('F j, Y, g:i a') }}</span>
+                                </div>
                             </div>
-                            <div class="request-actions">
-                                <button type="button" class="btn btn-outline-danger btn-sm"
+                            <div class="actions">
+                                <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-4"
                                     onclick="updateStatus({{ $req->id }}, 'Cancelled')">
-                                    <i class="fas fa-times"></i> Cancel Request
+                                    Cancel Request
                                 </button>
                             </div>
                         </div>
                     @endforeach
                 </div>
             @else
-                <p style="padding: 20px; text-align:center; color:#888;">No pending requests.</p>
+                <div class="text-center py-4">
+                    <p class="text-muted">No pending requests.</p>
+                </div>
             @endif
         </div>
 
         <!-- History -->
-        <div style="margin-top: 40px;">
-            <h3 style="color: var(--primary-color); font-size: 1.4rem;"><i class="fas fa-history"
-                    style="color: #6c757d;"></i> Past Services</h3>
+        <div class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 style="color: #6c757d; font-weight: 700; margin: 0;">
+                    <i class="fas fa-history me-2"></i> Past Services
+                </h4>
+                @if (count($history_requests) > 0)
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="selectAllHistory">
+                            <label class="form-check-label text-muted" for="selectAllHistory">Select All</label>
+                        </div>
+                        <button id="bulkDeleteBtn" class="btn btn-danger btn-sm rounded-pill px-3" style="display: none;"
+                            onclick="bulkDelete()">
+                            <i class="fas fa-trash-alt me-1"></i> Delete
+                        </button>
+                    </div>
+                @endif
+            </div>
+
             @if (count($history_requests) > 0)
-                <div style="margin-top: 15px;">
+                <div class="requests-grid">
                     @foreach ($history_requests as $h)
-                        <div class="request-card history">
-                            <div class="request-header">
-                                <h4 class="request-title">Service with {{ $h->provider_name }}</h4>
+                        <div class="request-card-minimal history-item {{ strtolower($h->status) == 'completed' ? 'completed' : 'cancelled' }}">
+                            <div class="header">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input history-checkbox" type="checkbox"
+                                            value="{{ $h->id }}" onchange="toggleDeleteBtn()">
+                                    </div>
+                                    <h5 class="title text-muted mb-0">Service with {{ $h->provider_name }}</h5>
+                                </div>
                                 <span
-                                    class="badge {{ $h->status == 'Completed' ? 'badge-completed' : 'badge-cancelled' }}">{{ $h->status }}</span>
+                                    class="badge-minimal {{ strtolower($h->status) == 'completed' ? 'completed' : 'cancelled' }}">
+                                    {{ $h->status }}
+                                </span>
                             </div>
-                            <div class="request-meta">
-                                <i class="fas fa-calendar-alt"></i> <strong>Date:</strong>
-                                {{ \Carbon\Carbon::parse($h->service_date)->format('M j, Y') }}
+                            <div class="meta-grid ps-4 ms-2">
+                                <div class="meta-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>{{ \Carbon\Carbon::parse($h->service_date)->format('M j, Y') }}</span>
+                                </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
             @else
-                <p style="padding: 20px; text-align:center; color:#888;">No history yet.</p>
+                <div class="text-center py-4">
+                    <p class="text-muted">No history yet.</p>
+                </div>
             @endif
         </div>
     </div>
@@ -159,7 +198,72 @@
 
     @push('scripts')
         <script>
+            // Bulk Delete Logic
+            const selectAllCheckbox = document.getElementById('selectAllHistory');
+            const historyCheckboxes = document.querySelectorAll('.history-checkbox');
+            const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function() {
+                    const isChecked = this.checked;
+                    historyCheckboxes.forEach(cb => cb.checked = isChecked);
+                    toggleDeleteBtn();
+                });
+            }
+
+            function toggleDeleteBtn() {
+                const checkedCount = document.querySelectorAll('.history-checkbox:checked').length;
+                bulkDeleteBtn.style.display = checkedCount > 0 ? 'block' : 'none';
+                
+                // Update select all state
+                if (checkedCount === historyCheckboxes.length && historyCheckboxes.length > 0) {
+                   selectAllCheckbox.checked = true;
+                   selectAllCheckbox.indeterminate = false;
+                } else if (checkedCount > 0) {
+                   selectAllCheckbox.checked = false;
+                   selectAllCheckbox.indeterminate = true;
+                } else {
+                   selectAllCheckbox.checked = false;
+                   selectAllCheckbox.indeterminate = false;
+                }
+            }
+
+            function bulkDelete() {
+                const selectedIds = Array.from(document.querySelectorAll('.history-checkbox:checked'))
+                    .map(cb => cb.value);
+
+                if (selectedIds.length === 0) return;
+
+                if (!confirm(`Are you sure you want to delete ${selectedIds.length} item(s)? This cannot be undone.`)) return;
+
+                fetch('{{ route('requests.bulk_delete') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            ids: selectedIds
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            location.reload();
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Something went wrong.');
+                    });
+            }
+
             let currentRating = 0;
+
 
             function setRating(value) {
                 currentRating = value;

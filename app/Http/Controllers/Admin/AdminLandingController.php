@@ -22,6 +22,23 @@ class AdminLandingController extends Controller
         return response()->json($data);
     }
 
+    private function getStartDate($range)
+    {
+        switch ($range) {
+            case '7d':
+                return now()->subDays(7);
+            case '90d':
+                return now()->subDays(90);
+            case 'year':
+                return now()->subYear();
+            case 'all':
+                return null;
+            case '30d':
+            default:
+                return now()->subDays(30);
+        }
+    }
+
     private function fetchStatsData($filters = [])
     {
         $total_residents = User::where('role', 'resident')->count();
@@ -33,8 +50,6 @@ class AdminLandingController extends Controller
         $recent_users = User::latest()->take(5)->get();
 
         // Skill Distribution
-        // Note: Skill distribution is typically all-time, but we could filter by user_skills.created_at if needed.
-        // For now keeping it all-time or generic as it represents "supply".
         $skill_dist = DB::table('skill_categories as c')
             ->leftJoin('skills as s', 'c.id', '=', 's.category_id')
             ->leftJoin('user_skills as us', 's.id', '=', 'us.skill_id')
@@ -45,31 +60,14 @@ class AdminLandingController extends Controller
 
         // CHART DATA
 
-        // Helper date range function
-        $getDateRange = function ($range) {
-            switch ($range) {
-                case '7d':
-                    return now()->subDays(7);
-                case '90d':
-                    return now()->subDays(90);
-                case 'year':
-                    return now()->subYear();
-                case 'all':
-                    return null;
-                case '30d':
-                default:
-                    return now()->subDays(30);
-            }
-        };
-
-        // Initialize chart data structure to prevent errors if no data found
+        // Initialize chart data structure
         $monthly_users = ['labels' => [], 'data' => []];
         $request_stats = ['labels' => [], 'data' => []];
         $role_stats = ['labels' => [], 'data' => []];
 
         // 1. Monthly User Registration
         $userRange = $filters['user_range'] ?? '30d';
-        $userStartDate = $getDateRange($userRange);
+        $userStartDate = $this->getStartDate($userRange);
 
         $query = User::select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as count'));
         if ($userStartDate) {
@@ -77,31 +75,35 @@ class AdminLandingController extends Controller
         }
         $monthly_users_data = $query->groupBy(DB::raw('DATE(created_at)'))->orderBy(DB::raw('DATE(created_at)'), 'asc')->get();
 
-        // Fill dates only if not 'all' and typically for shorter ranges
+        // Fill dates
         if ($userRange !== 'all' && $userRange !== 'year') {
             $start = $userStartDate ?: now()->subDays(30);
             $period = \Carbon\CarbonPeriod::create($start, now());
             foreach ($period as $date) {
                 $formattedDate = $date->format('Y-m-d');
-                // Loose comparison to match date string from DB
-                $entry = $monthly_users_data->first(function ($item) use ($formattedDate) {
-                    return substr($item->date, 0, 10) === $formattedDate;
-                });
+                $entry = null;
+                foreach ($monthly_users_data as $item) {
+                    if (substr($item->date, 0, 10) === $formattedDate) {
+                        $entry = $item;
+                        break;
+                    }
+                }
+
                 $count = $entry ? $entry->count : 0;
 
                 $monthly_users['labels'][] = $date->format('M d');
                 $monthly_users['data'][] = $count;
             }
         } else {
-            // For longer ranges, just show existing data points
-            $monthly_users['labels'] = $monthly_users_data->pluck('date')->map(fn($d) => \Carbon\Carbon::parse($d)->format('M d'));
-            $monthly_users['data'] = $monthly_users_data->pluck('count');
+            foreach ($monthly_users_data as $d) {
+                $monthly_users['labels'][] = \Carbon\Carbon::parse($d->date)->format('M d');
+                $monthly_users['data'][] = $d->count;
+            }
         }
-
 
         // 2. Service Request Status Distribution
         $requestRange = $filters['request_range'] ?? '30d';
-        $requestStartDate = $getDateRange($requestRange);
+        $requestStartDate = $this->getStartDate($requestRange);
 
         $requestQuery = \App\Models\ServiceRequest::select('status', DB::raw('count(*) as count'));
         if ($requestStartDate) {
@@ -109,14 +111,14 @@ class AdminLandingController extends Controller
         }
         $request_stats_data = $requestQuery->groupBy('status')->get();
 
-        $request_stats = [
-            'labels' => $request_stats_data->pluck('status'),
-            'data' => $request_stats_data->pluck('count'),
-        ];
+        foreach ($request_stats_data as $stat) {
+            $request_stats['labels'][] = $stat->status;
+            $request_stats['data'][] = $stat->count;
+        }
 
         // 3. User Role Distribution
-        $roleRange = $filters['role_range'] ?? '30d'; // Filter users joined in range
-        $roleStartDate = $getDateRange($roleRange);
+        $roleRange = $filters['role_range'] ?? '30d';
+        $roleStartDate = $this->getStartDate($roleRange);
 
         $roleQuery = User::select('role', DB::raw('count(*) as count'));
         if ($roleStartDate) {
@@ -124,28 +126,31 @@ class AdminLandingController extends Controller
         }
         $role_stats_data = $roleQuery->groupBy('role')->get();
 
-        $role_stats = [
-            'labels' => $role_stats_data->pluck('role')->map(function ($r) {
-                if ($r === 'resident')
-                    return 'Service Provider';
-                if ($r === 'seeker')
-                    return 'Service Seeker';
-                return ucfirst($r);
-            }),
-            'data' => $role_stats_data->pluck('count'),
-        ];
+        foreach ($role_stats_data as $stat) {
+            $label = ucfirst($stat->role);
+            if ($stat->role === 'resident') {
+                $label = 'Service Provider';
+            } elseif ($stat->role === 'seeker') {
+                $label = 'Service Seeker';
+            }
 
-        return compact(
-            'total_residents',
-            'total_seekers',
-            'total_services',
-            'skill_dist',
-            'recent_users',
-            'monthly_users',
-            'request_stats',
-            'role_stats',
-            'total_verified_providers'
-        );
+            $role_stats['labels'][] = $label;
+            $role_stats['data'][] = $stat->count;
+        }
+
+        // Explicitly build return array
+        $dashboardData = [];
+        $dashboardData['total_residents'] = $total_residents;
+        $dashboardData['total_seekers'] = $total_seekers;
+        $dashboardData['total_services'] = $total_services;
+        $dashboardData['skill_dist'] = $skill_dist;
+        $dashboardData['recent_users'] = $recent_users;
+        $dashboardData['monthly_users'] = $monthly_users;
+        $dashboardData['request_stats'] = $request_stats;
+        $dashboardData['role_stats'] = $role_stats;
+        $dashboardData['total_verified_providers'] = $total_verified_providers;
+
+        return $dashboardData;
     }
 
 }

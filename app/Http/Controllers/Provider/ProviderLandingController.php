@@ -12,6 +12,11 @@ class ProviderLandingController extends Controller
     {
         $user = Auth::user();
         $profile = $user->profile;
-        return view('service_provider', compact('user', 'profile'));
+
+        $viewData = [];
+        $viewData['user'] = $user;
+        $viewData['profile'] = $profile;
+
+        return view('service_provider', $viewData);
     }
 }

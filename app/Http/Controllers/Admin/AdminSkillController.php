@@ -23,7 +23,12 @@ class AdminSkillController extends Controller
             'category_id' => 'required|exists:skill_categories,id',
         ]);
 
-        Skill::create($validated);
+        // Explicitly build data array
+        $skillData = [];
+        $skillData['name'] = $validated['name'];
+        $skillData['category_id'] = $validated['category_id'];
+
+        Skill::create($skillData);
 
         return redirect()->route('admin.skills.index')->with('success', 'Skill created successfully.');
     }
@@ -37,7 +42,12 @@ class AdminSkillController extends Controller
             'category_id' => 'required|exists:skill_categories,id',
         ]);
 
-        $skill->update($validated);
+        // Explicitly build update data
+        $updateData = [];
+        $updateData['name'] = $validated['name'];
+        $updateData['category_id'] = $validated['category_id'];
+
+        $skill->update($updateData);
 
         return redirect()->route('admin.skills.index')->with('success', 'Skill updated successfully.');
     }
@@ -54,7 +64,12 @@ class AdminSkillController extends Controller
     public function storeCategory(Request $request)
     {
         $validated = $request->validate(['name' => 'required|string|max:255|unique:skill_categories']);
-        SkillCategory::create($validated);
+
+        $categoryData = [];
+        $categoryData['name'] = $validated['name'];
+
+        SkillCategory::create($categoryData);
+
         return redirect()->back()->with('success', 'Category created successfully.');
     }
 }

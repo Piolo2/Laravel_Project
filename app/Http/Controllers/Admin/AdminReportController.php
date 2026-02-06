@@ -17,10 +17,10 @@ class AdminReportController extends Controller
             'total_users' => User::count(),
             'total_requests' => ServiceRequest::count(),
             'pending_requests' => ServiceRequest::where('status', 'pending')->count(),
-            'completed_requests' => ServiceRequest::where('status', 'completed')->count(), // Assuming 'completed' or 'payed'
+            'completed_requests' => ServiceRequest::where('status', 'completed')->count(),
         ];
 
-        return view('admin.reports.index', compact('stats'));
+        return view('admin.reports.index', ['stats' => $stats]);
     }
 
     public function users()
@@ -30,7 +30,7 @@ class AdminReportController extends Controller
             ->groupBy('role')
             ->get();
 
-        return view('admin.reports.users', compact('roles_distribution'));
+        return view('admin.reports.users', ['roles_distribution' => $roles_distribution]);
     }
 
     public function requests()
@@ -40,7 +40,7 @@ class AdminReportController extends Controller
             ->groupBy('status')
             ->get();
 
-        return view('admin.reports.requests', compact('status_distribution'));
+        return view('admin.reports.requests', ['status_distribution' => $status_distribution]);
     }
 
     public function exportUsers()
@@ -57,13 +57,16 @@ class AdminReportController extends Controller
             User::with('profile')->chunk(100, function ($users) use ($file) {
                 foreach ($users as $user) {
                     $name = $user->profile->full_name ?? $user->username;
-                    fputcsv($file, [
-                        $user->id,
-                        $name,
-                        $user->email,
-                        $user->role,
-                        $user->created_at->format('Y-m-d H:i:s'),
-                    ]);
+
+                    // Explicitly build row
+                    $row = [];
+                    $row[] = $user->id;
+                    $row[] = $name;
+                    $row[] = $user->email;
+                    $row[] = $user->role;
+                    $row[] = $user->created_at->format('Y-m-d H:i:s');
+
+                    fputcsv($file, $row);
                 }
             });
 
@@ -86,18 +89,27 @@ class AdminReportController extends Controller
 
             ServiceRequest::with(['seeker.profile', 'provider.profile'])->chunk(100, function ($requests) use ($file) {
                 foreach ($requests as $request) {
-                    $seekerName = $request->seeker->profile->full_name ?? $request->seeker->username ?? 'Unknown';
-                    $providerName = $request->provider->profile->full_name ?? $request->provider->username ?? 'Unknown';
+                    $seekerName = 'Unknown';
+                    if ($request->seeker) {
+                        $seekerName = $request->seeker->profile->full_name ?? $request->seeker->username;
+                    }
 
-                    fputcsv($file, [
-                        $request->id,
-                        $seekerName,
-                        $providerName,
-                        $request->status,
-                        $request->service_date,
-                        $request->notes,
-                        $request->created_at->format('Y-m-d H:i:s'),
-                    ]);
+                    $providerName = 'Unknown';
+                    if ($request->provider) {
+                        $providerName = $request->provider->profile->full_name ?? $request->provider->username;
+                    }
+
+                    // Explicitly build row
+                    $row = [];
+                    $row[] = $request->id;
+                    $row[] = $seekerName;
+                    $row[] = $providerName;
+                    $row[] = $request->status;
+                    $row[] = $request->service_date;
+                    $row[] = $request->notes;
+                    $row[] = $request->created_at->format('Y-m-d H:i:s');
+
+                    fputcsv($file, $row);
                 }
             });
 

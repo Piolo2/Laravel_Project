@@ -28,24 +28,40 @@ class SearchController extends Controller
 
     public function getMarkers()
     {
-        // Logic moved from get_markers.php
+        // Get raw profiles with relations
         $profiles = Profile::has('user')->with(['user.skills'])
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
-            ->select('user_id', 'full_name', 'latitude', 'longitude', 'profile_picture') // Select only what's needed, plus relations
+            ->select('user_id', 'full_name', 'latitude', 'longitude', 'profile_picture')
             ->get();
 
-        $markers = $profiles->map(function ($profile) {
-            return [
+        $markers = [];
+        foreach ($profiles as $profile) {
+            // Determine user role label
+            if ($profile->user->role === 'resident') {
+                $roleLabel = 'Resident, Service Provider';
+            } else {
+                $roleLabel = 'Service Seeker';
+            }
+
+            // Manually build skills string
+            $skillNames = [];
+            foreach ($profile->user->skills as $skill) {
+                $skillNames[] = $skill->name;
+            }
+            // Join skills with comma
+            $skillsString = implode(', ', $skillNames);
+
+            $markers[] = [
                 'user_id' => $profile->user_id,
                 'full_name' => $profile->full_name,
                 'latitude' => (float) $profile->latitude,
                 'longitude' => (float) $profile->longitude,
-                'categories' => $profile->user->role === 'resident' ? 'Resident, Service Provider' : 'Service Seeker',
-                'skills' => $profile->user->skills->pluck('name')->implode(', '),
+                'categories' => $roleLabel,
+                'skills' => $skillsString,
                 'profile_picture' => $profile->profile_picture,
             ];
-        });
+        }
 
         return response()->json($markers);
     }

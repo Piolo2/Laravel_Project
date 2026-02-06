@@ -34,13 +34,16 @@ class ReviewController extends Controller
             $serviceRequest->update(['status' => 'Completed']);
         }
 
-        Review::create([
+        // Prepare data for review creation
+        $reviewData = [
             'service_request_id' => $serviceRequest->id,
             'seeker_id' => Auth::id(),
             'provider_id' => $serviceRequest->provider_id,
             'rating' => $request->rating,
             'comment' => $request->comment,
-        ]);
+        ];
+
+        Review::create($reviewData);
 
         return back()->with('success', 'Thank you for your feedback!');
     }

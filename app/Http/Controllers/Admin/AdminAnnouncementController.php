@@ -37,14 +37,20 @@ class AdminAnnouncementController extends Controller
             $imagePath = 'images/announcements/' . $filename;
         }
 
-        \App\Models\Announcement::create([
-            'title' => $validated['title'],
-            'image_path' => $imagePath,
-            'admin_name' => $validated['admin_name'] ?? 'Admin',
-            'description' => $validated['description'],
-            'date_posted' => $validated['date_posted'],
-            'deadline' => $validated['deadline'],
-        ]);
+        // Manually build data array
+        $announcementData = [];
+        $announcementData['title'] = $validated['title'];
+        $announcementData['image_path'] = $imagePath;
+        if (isset($validated['admin_name'])) {
+            $announcementData['admin_name'] = $validated['admin_name'];
+        } else {
+            $announcementData['admin_name'] = 'Admin';
+        }
+        $announcementData['description'] = $validated['description'];
+        $announcementData['date_posted'] = $validated['date_posted'];
+        $announcementData['deadline'] = $validated['deadline'];
+
+        \App\Models\Announcement::create($announcementData);
 
         return redirect()->route('admin.announcements.index')->with('success', 'Announcement created successfully.');
     }
@@ -68,25 +74,40 @@ class AdminAnnouncementController extends Controller
             'deadline' => 'required|date|after_or_equal:date_posted',
         ]);
 
+        // Manually build update data
+        $updateData = [];
+        $updateData['title'] = $validated['title'];
+
+        if (isset($validated['admin_name'])) {
+            $updateData['admin_name'] = $validated['admin_name'];
+        } else {
+            $updateData['admin_name'] = 'Admin';
+        }
+
+        $updateData['description'] = $validated['description'];
+        $updateData['date_posted'] = $validated['date_posted'];
+        $updateData['deadline'] = $validated['deadline'];
+
+        // Handle Image Update Explicitly
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($announcement->image_path && file_exists(public_path($announcement->image_path))) {
-                unlink(public_path($announcement->image_path));
+            // 1. Check and delete old image
+            if ($announcement->image_path) {
+                $oldPath = public_path($announcement->image_path);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
             }
 
+            // 2. Upload new image
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('images/announcements'), $filename);
-            $announcement->image_path = 'images/announcements/' . $filename;
+
+            // 3. Add to update data
+            $updateData['image_path'] = 'images/announcements/' . $filename;
         }
 
-        $announcement->update([
-            'title' => $validated['title'],
-            'admin_name' => $validated['admin_name'] ?? 'Admin',
-            'description' => $validated['description'],
-            'date_posted' => $validated['date_posted'],
-            'deadline' => $validated['deadline'],
-        ]);
+        $announcement->update($updateData);
 
         return redirect()->route('admin.announcements.index')->with('success', 'Announcement updated successfully.');
     }
@@ -94,9 +115,15 @@ class AdminAnnouncementController extends Controller
     public function destroy($id)
     {
         $announcement = \App\Models\Announcement::findOrFail($id);
-        if ($announcement->image_path && file_exists(public_path($announcement->image_path))) {
-            unlink(public_path($announcement->image_path));
+
+        // Explicitly check and delete image
+        if ($announcement->image_path) {
+            $fullPath = public_path($announcement->image_path);
+            if (file_exists($fullPath)) {
+                unlink($fullPath);
+            }
         }
+
         $announcement->delete();
 
         return redirect()->route('admin.announcements.index')->with('success', 'Announcement deleted successfully.');

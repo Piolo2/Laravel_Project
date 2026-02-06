@@ -28,16 +28,19 @@ class AuthController extends Controller
             $user = Auth::user();
             \Illuminate\Support\Facades\Log::info('Login Success for user: ' . $user->username . ' Role: ' . $user->role);
 
+            $targetUrl = '';
             if ($user->role === 'admin') {
                 \Illuminate\Support\Facades\Log::info('Redirecting Admin to dashboard');
-                return redirect()->intended('/admin/dashboard');
+                $targetUrl = '/admin/dashboard';
             } elseif ($user->role === 'resident') {
                 \Illuminate\Support\Facades\Log::info('Redirecting Resident');
-                return redirect()->intended('/service-provider');
+                $targetUrl = '/service-provider';
             } else {
                 \Illuminate\Support\Facades\Log::info('Redirecting Seeker');
-                return redirect()->intended('/service-seeker');
+                $targetUrl = '/service-seeker';
             }
+
+            return redirect()->intended($targetUrl);
         }
 
         \Illuminate\Support\Facades\Log::info('Login Failed for username: ' . $request->username);
@@ -63,19 +66,26 @@ class AuthController extends Controller
         ]);
 
         $role = \App\Models\Role::where('slug', $request->role)->first();
+        $role_id = $role ? $role->id : null;
 
-        $user = User::create([
+        // Manually prepare user data
+        $userData = [
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
-            'role_id' => $role ? $role->id : null,
-        ]);
+            'role_id' => $role_id,
+        ];
 
-        Profile::create([
+        $user = User::create($userData);
+
+        // Manually prepare profile data
+        $profileData = [
             'user_id' => $user->id,
             'full_name' => $request->full_name,
-        ]);
+        ];
+
+        Profile::create($profileData);
 
         Auth::login($user);
 

@@ -12,34 +12,56 @@ class ServiceRequestController extends Controller
     {
         $user = Auth::user();
 
-        $active_requests = $user->serviceRequestsAsSeeker()
+        // Get active requests
+        $active_requests_data = $user->serviceRequestsAsSeeker()
             ->with('provider.profile')
             ->whereIn('status', ['Accepted'])
-            ->get()
-            ->map(function ($req) {
-                $req->provider_name = $req->provider->profile->full_name ?? $req->provider->username;
-                $req->provider_contact = $req->provider->profile->contact_number ?? 'N/A';
-                return $req;
-            });
+            ->get();
 
-        $pending_requests = $user->serviceRequestsAsSeeker()
+        $active_requests = [];
+        foreach ($active_requests_data as $req) {
+            if ($req->provider && $req->provider->profile) {
+                $req->provider_name = $req->provider->profile->full_name;
+                $req->provider_contact = $req->provider->profile->contact_number;
+            } else {
+                $req->provider_name = $req->provider->username;
+                $req->provider_contact = 'N/A';
+            }
+            $active_requests[] = $req;
+        }
+
+        // Get pending requests
+        $pending_requests_data = $user->serviceRequestsAsSeeker()
             ->with('provider.profile')
             ->where('status', 'Pending')
-            ->get()
-            ->map(function ($req) {
-                $req->provider_name = $req->provider->profile->full_name ?? $req->provider->username;
-                return $req;
-            });
+            ->get();
 
-        $history_requests = $user->serviceRequestsAsSeeker()
+        $pending_requests = [];
+        foreach ($pending_requests_data as $req) {
+            if ($req->provider && $req->provider->profile) {
+                $req->provider_name = $req->provider->profile->full_name;
+            } else {
+                $req->provider_name = $req->provider->username;
+            }
+            $pending_requests[] = $req;
+        }
+
+        // Get history requests
+        $history_requests_data = $user->serviceRequestsAsSeeker()
             ->with('provider.profile')
             ->whereIn('status', ['Completed', 'Declined', 'Cancelled'])
             ->orderBy('updated_at', 'desc')
-            ->get()
-            ->map(function ($req) {
-                $req->provider_name = $req->provider->profile->full_name ?? $req->provider->username;
-                return $req;
-            });
+            ->get();
+
+        $history_requests = [];
+        foreach ($history_requests_data as $req) {
+            if ($req->provider && $req->provider->profile) {
+                $req->provider_name = $req->provider->profile->full_name;
+            } else {
+                $req->provider_name = $req->provider->username;
+            }
+            $history_requests[] = $req;
+        }
 
         return view('seeker_requests', compact('active_requests', 'pending_requests', 'history_requests'));
     }
@@ -47,36 +69,61 @@ class ServiceRequestController extends Controller
     public function providerIndex()
     {
         $user = Auth::user();
-        $pending_requests = $user->serviceRequestsAsProvider()
+
+        // Get pending requests
+        $pending_requests_data = $user->serviceRequestsAsProvider()
             ->with('seeker.profile')
             ->where('status', 'Pending')
-            ->get()
-            ->map(function ($req) {
-                $req->seeker_name = $req->seeker->profile->full_name ?? $req->seeker->username;
-                $req->seeker_contact = $req->seeker->profile->contact_number ?? 'N/A';
-                $req->seeker_address = $req->seeker->profile->address ?? 'N/A';
-                return $req;
-            });
+            ->get();
 
-        $ongoing_requests = $user->serviceRequestsAsProvider()
+        $pending_requests = [];
+        foreach ($pending_requests_data as $req) {
+            if ($req->seeker && $req->seeker->profile) {
+                $req->seeker_name = $req->seeker->profile->full_name;
+                $req->seeker_contact = $req->seeker->profile->contact_number;
+                $req->seeker_address = $req->seeker->profile->address;
+            } else {
+                $req->seeker_name = $req->seeker->username;
+                $req->seeker_contact = 'N/A';
+                $req->seeker_address = 'N/A';
+            }
+            $pending_requests[] = $req;
+        }
+
+        // Get ongoing requests
+        $ongoing_requests_data = $user->serviceRequestsAsProvider()
             ->with('seeker.profile')
             ->where('status', 'Accepted')
-            ->get()
-            ->map(function ($req) {
-                $req->seeker_name = $req->seeker->profile->full_name ?? $req->seeker->username;
-                $req->seeker_contact = $req->seeker->profile->contact_number ?? 'N/A';
-                return $req;
-            });
+            ->get();
 
-        $history_requests = $user->serviceRequestsAsProvider()
+        $ongoing_requests = [];
+        foreach ($ongoing_requests_data as $req) {
+            if ($req->seeker && $req->seeker->profile) {
+                $req->seeker_name = $req->seeker->profile->full_name;
+                $req->seeker_contact = $req->seeker->profile->contact_number;
+            } else {
+                $req->seeker_name = $req->seeker->username;
+                $req->seeker_contact = 'N/A';
+            }
+            $ongoing_requests[] = $req;
+        }
+
+        // Get history requests
+        $history_requests_data = $user->serviceRequestsAsProvider()
             ->with('seeker.profile')
             ->whereIn('status', ['Declined', 'Completed', 'Cancelled'])
             ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function ($req) {
-                $req->seeker_name = $req->seeker->profile->full_name ?? $req->seeker->username;
-                return $req;
-            });
+            ->get();
+
+        $history_requests = [];
+        foreach ($history_requests_data as $req) {
+            if ($req->seeker && $req->seeker->profile) {
+                $req->seeker_name = $req->seeker->profile->full_name;
+            } else {
+                $req->seeker_name = $req->seeker->username;
+            }
+            $history_requests[] = $req;
+        }
 
         return view('provider_requests', compact('pending_requests', 'ongoing_requests', 'history_requests'));
     }
@@ -88,6 +135,7 @@ class ServiceRequestController extends Controller
                 'required',
                 'exists:users,id',
                 function ($attribute, $value, $fail) {
+                    // Check if the user is a resident
                     $isResident = \App\Models\User::where('id', $value)->where('role', 'resident')->exists();
                     if (!$isResident) {
                         $fail('The selected provider is invalid.');
@@ -98,13 +146,15 @@ class ServiceRequestController extends Controller
             'notes' => 'nullable|string'
         ]);
 
-        ServiceRequest::create([
+        $input = [
             'seeker_id' => Auth::id(),
             'provider_id' => $request->provider_id,
             'service_date' => $request->service_date,
             'notes' => $request->notes,
             'status' => 'Pending'
-        ]);
+        ];
+
+        ServiceRequest::create($input);
 
         return back()->with('success', 'Service request sent successfully!');
     }
@@ -117,30 +167,61 @@ class ServiceRequestController extends Controller
         ]);
 
         $status = $request->status;
-        // Removed legacy mapping that forced Cancelled to Declined to preserve user intent
-
         $serviceRequest = ServiceRequest::findOrFail($request->request_id);
 
-        // Simple authorization check
-        if ($serviceRequest->provider_id !== Auth::id() && $serviceRequest->seeker_id !== Auth::id()) {
-            abort(403);
+        // Check if user is allowed to update
+        $provider_id = $serviceRequest->provider_id;
+        $seeker_id = $serviceRequest->seeker_id;
+        $current_user_id = Auth::id();
+
+        if ($provider_id !== $current_user_id) {
+            if ($seeker_id !== $current_user_id) {
+                abort(403);
+            }
         }
 
-        // State machine check
-        $finalStates = ['Completed', 'Declined', 'Cancelled'];
-        if (in_array($serviceRequest->status, $finalStates)) {
+        // Check if request is already finished
+        $is_completed = ($serviceRequest->status == 'Completed');
+        $is_declined = ($serviceRequest->status == 'Declined');
+        $is_cancelled = ($serviceRequest->status == 'Cancelled');
+
+        if ($is_completed || $is_declined || $is_cancelled) {
             if ($request->ajax()) {
                 return response()->json(['success' => false, 'message' => 'Cannot update a finalized request.']);
             }
             return back()->with('error', 'Cannot update a finalized request.');
         }
 
-        $serviceRequest->update(['status' => $status]);
+        // Update status
+        $serviceRequest->status = $status;
+        $serviceRequest->save();
 
         if ($request->ajax()) {
             return response()->json(['success' => true, 'message' => "Request status updated to $status."]);
         }
 
         return back()->with('msg', "Request status updated to $status.");
+
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:service_requests,id',
+        ]);
+
+        $user_id = Auth::id();
+
+        // Ensure records belong to logged-in user to prevent unauthorized deletion
+        $deleted = ServiceRequest::whereIn('id', $request->ids)
+            ->where('seeker_id', $user_id)
+            ->whereIn('status', ['Completed', 'Declined', 'Cancelled']) // Only allow deleting history items
+            ->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => $deleted . ' request(s) deleted successfully.'
+        ]);
     }
 }

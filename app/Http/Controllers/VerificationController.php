@@ -33,35 +33,50 @@ class VerificationController extends Controller
             'id_back_file' => 'required|image|max:5120',
         ]);
 
-        $data = $request->except(['_token', 'id_front_file', 'id_back_file', 'compliance_certificate_file', 'profile_picture']);
-        $data['user_id'] = Auth::id();
-        $data['skill_types'] = json_encode($request->skill_types ?? []);
+        // Manually build the verification data array
+        $verificationData = [];
+        $verificationData['user_id'] = Auth::id();
+        $verificationData['first_name'] = $request->first_name;
+        $verificationData['last_name'] = $request->last_name;
+        $verificationData['address'] = $request->address;
+        $verificationData['contact_number'] = $request->contact_number;
 
-        // Handle File Uploads
+        // Handle skill types safely
+        if ($request->skill_types) {
+            $verificationData['skill_types'] = json_encode($request->skill_types);
+        } else {
+            $verificationData['skill_types'] = json_encode([]);
+        }
+
+        // Handle File Uploads Explictly
         if ($request->hasFile('id_front_file')) {
-            $data['id_front_file'] = $request->file('id_front_file')->store('verification_docs', 'public');
+            $path = $request->file('id_front_file')->store('verification_docs', 'public');
+            $verificationData['id_front_file'] = $path;
         }
 
         if ($request->hasFile('id_back_file')) {
-            $data['id_back_file'] = $request->file('id_back_file')->store('verification_docs', 'public');
+            $path = $request->file('id_back_file')->store('verification_docs', 'public');
+            $verificationData['id_back_file'] = $path;
         }
 
         if ($request->hasFile('compliance_certificate_file')) {
-            $data['compliance_certificate_file'] = $request->file('compliance_certificate_file')->store('verification_docs', 'public');
+            $path = $request->file('compliance_certificate_file')->store('verification_docs', 'public');
+            $verificationData['compliance_certificate_file'] = $path;
         }
 
         // Create Verification Record
-        ProviderVerification::create($data);
+        ProviderVerification::create($verificationData);
 
         // Optionally update Profile if not exists
-        $profile = Auth::user()->profile;
-        if (!$profile) {
-            Profile::create([
-                'user_id' => Auth::id(),
+        $user = Auth::user();
+        if (!$user->profile) {
+            $profileData = [
+                'user_id' => $user->id,
                 'full_name' => $request->first_name . ' ' . $request->last_name,
                 'address' => $request->address,
                 'contact_number' => $request->contact_number,
-            ]);
+            ];
+            Profile::create($profileData);
         }
 
         return redirect()->route('profile')->with('success', 'Verification request submitted successfully! Please wait for admin approval.');

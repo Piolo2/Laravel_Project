@@ -11,6 +11,10 @@ class SeekerLandingController extends Controller
     public function index()
     {
         $top_cats = SkillCategory::take(3)->get();
-        return view('service_seeker', compact('top_cats'));
+
+        $viewData = [];
+        $viewData['top_cats'] = $top_cats;
+
+        return view('service_seeker', $viewData);
     }
 }

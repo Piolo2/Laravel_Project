@@ -44,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
     // Service Requests
     Route::get('/requests', [ServiceRequestController::class, 'providerIndex'])->name('requests');
     Route::get('/my-requests', [ServiceRequestController::class, 'seekerIndex'])->name('my_requests');
+    Route::post('/service-requests/bulk-delete', [ServiceRequestController::class, 'bulkDelete'])->name('requests.bulk_delete');
     Route::post('/requests/store', [ServiceRequestController::class, 'store'])->name('requests.store');
     Route::post('/requests/update', [ServiceRequestController::class, 'update'])->name('requests.update');
 

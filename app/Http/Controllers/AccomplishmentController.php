@@ -11,7 +11,9 @@ class AccomplishmentController extends Controller
 {
     public function store(Request $request)
     {
-        $count = Auth::user()->accomplishments()->count();
+        $user = Auth::user();
+        $count = $user->accomplishments()->count();
+
         if ($count >= 7) {
             return back()->with('error', 'You can can only add up to 7 accomplishments.');
         }
@@ -24,10 +26,13 @@ class AccomplishmentController extends Controller
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('accomplishments', 'public');
 
-            Auth::user()->accomplishments()->create([
+            // Explicitly prepare data
+            $accomplishmentData = [
                 'image_path' => '/storage/' . $path,
                 'caption' => $request->caption,
-            ]);
+            ];
+
+            $user->accomplishments()->create($accomplishmentData);
 
             return back()->with('success', 'Accomplishment added successfully!');
         }
@@ -37,11 +42,17 @@ class AccomplishmentController extends Controller
 
     public function destroy($id)
     {
-        $accomplishment = Auth::user()->accomplishments()->findOrFail($id);
+        $user = Auth::user();
+        $accomplishment = $user->accomplishments()->findOrFail($id);
 
-        // Delete file from storage
-        $relativePath = str_replace('/storage/', '', $accomplishment->image_path);
-        Storage::disk('public')->delete($relativePath);
+        // Explicitly handle file path
+        $fullPath = $accomplishment->image_path;
+        $relativePath = str_replace('/storage/', '', $fullPath);
+
+        // Safety check before delete
+        if (Storage::disk('public')->exists($relativePath)) {
+            Storage::disk('public')->delete($relativePath);
+        }
 
         $accomplishment->delete();
 

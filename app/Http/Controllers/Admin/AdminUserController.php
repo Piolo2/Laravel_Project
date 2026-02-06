@@ -55,7 +55,10 @@ class AdminUserController extends Controller
             'role' => 'required|in:admin,seeker,resident',
         ]);
 
-        $user->update(['role' => $request->role]);
+        $updateData = [];
+        $updateData['role'] = $request->role;
+
+        $user->update($updateData);
 
         return redirect()->back()->with('success', 'User role updated successfully.');
     }
@@ -77,10 +80,11 @@ class AdminUserController extends Controller
         $user = User::findOrFail($id);
 
         if ($user->providerVerification) {
-            $user->providerVerification->update([
-                'status' => 'approved',
-                'rejection_reason' => null
-            ]);
+            $verificationUpdate = [];
+            $verificationUpdate['status'] = 'approved';
+            $verificationUpdate['rejection_reason'] = null;
+
+            $user->providerVerification->update($verificationUpdate);
 
             return redirect()->back()->with('success', 'Provider verified successfully.');
         }
@@ -97,10 +101,11 @@ class AdminUserController extends Controller
         ]);
 
         if ($user->providerVerification) {
-            $user->providerVerification->update([
-                'status' => 'rejected',
-                'rejection_reason' => $request->rejection_reason
-            ]);
+            $verificationUpdate = [];
+            $verificationUpdate['status'] = 'rejected';
+            $verificationUpdate['rejection_reason'] = $request->rejection_reason;
+
+            $user->providerVerification->update($verificationUpdate);
 
             return redirect()->back()->with('success', 'Verification request rejected.');
         }

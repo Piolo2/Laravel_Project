@@ -1034,7 +1034,7 @@ button.btn-primary {
 
 .auth-form-side input,
 .auth-form-side select {
-    border-radius: 12px;
+    border-radius: 0;
     padding: 12px 16px;
     background: #fdfdfd;
     border: 2px solid #f0f0f0;
@@ -1047,6 +1047,11 @@ button.btn-primary {
     background: white;
     outline: none;
     box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+}
+
+.auth-form-side .btn,
+.auth-form-side .btn-floating {
+    border-radius: 0;
 }
 
 @media (max-width: 1000px) {

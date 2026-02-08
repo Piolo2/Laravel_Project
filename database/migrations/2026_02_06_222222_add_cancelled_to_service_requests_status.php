@@ -9,8 +9,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        // Modify the status column to include 'Cancelled'
-        DB::statement("ALTER TABLE service_requests MODIFY COLUMN status ENUM('Pending', 'Accepted', 'Declined', 'Completed', 'Cancelled') DEFAULT 'Pending'");
+        // SQLite doesn't support MODIFY COLUMN and treats ENUMs as TEXT, so we can skip this
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE service_requests MODIFY COLUMN status ENUM('Pending', 'Accepted', 'Declined', 'Completed', 'Cancelled') DEFAULT 'Pending'");
+        }
     }
 
     /**

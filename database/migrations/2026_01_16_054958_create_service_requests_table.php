@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('seeker_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('provider_id')->constrained('users')->onDelete('cascade');
             $table->dateTime('service_date');
-            $table->enum('status', ['Pending', 'Accepted', 'Declined', 'Completed'])->default('Pending');
+            $table->enum('status', ['Pending', 'Accepted', 'Declined', 'Completed', 'Cancelled'])->default('Pending');
             $table->text('notes')->nullable();
             $table->timestamps();
         });

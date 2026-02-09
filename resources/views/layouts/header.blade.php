@@ -23,7 +23,7 @@
                 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
             @elseif (Auth::user()->role === 'resident')
                 <a href="{{ route('profile') }}">Profile</a>
-                <a href="{{ route('services') }}">Services</a>
+                <a href="{{ route('services.index') }}">My Skills</a>
                 <a href="{{ route('requests') }}">Requests</a>
             @elseif (Auth::user()->role === 'seeker')
                 <a href="{{ route('profile') }}">Profile</a>

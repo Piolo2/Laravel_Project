@@ -14,10 +14,10 @@ class SkillController extends Controller
     {
         $user = Auth::user();
 
-        // fetch raw skills data
+        // get skills data from db
         $my_skills_data = $user->skills()->with('category')->withPivot('id', 'availability_status', 'description')->get();
 
-        // Manual mapping
+        // manual mapping for skills
         $my_skills = [];
         foreach ($my_skills_data as $skill) {
             $skill->pivot_id = $skill->pivot->id;
@@ -34,10 +34,10 @@ class SkillController extends Controller
             $my_skills[] = $skill;
         }
 
-        // Fetch all skills for the dropdown
+        // fetch all skills for dropdown
         $all_skills = \App\Models\Skill::with('category')->get();
 
-        // Manual grouping by category
+        // group by category manually
         $skills_by_category = [];
         foreach ($all_skills as $skill) {
             $catName = 'Uncategorized';
@@ -63,7 +63,7 @@ class SkillController extends Controller
 
         $user = Auth::user();
 
-        // Check if skill already added
+        // check if skill already added
         $already_exists = $user->skills()->where('skill_id', $request->skill_id)->exists();
         if ($already_exists) {
             return back()->with('error', 'You have already added this skill.');
@@ -86,7 +86,7 @@ class SkillController extends Controller
         $userId = Auth::id();
         \Illuminate\Support\Facades\Log::info("Toggle Status Request", ['id' => $id, 'user_id' => $userId, 'status' => $status]);
 
-        // 1. Check if the record exists and belongs to the user
+        // 1. check if record exist
         $exists = \Illuminate\Support\Facades\DB::table('user_skills')
             ->where('id', $id)
             ->where('user_id', $userId)
@@ -100,7 +100,7 @@ class SkillController extends Controller
             return back()->with('error', 'Service not found or access denied.');
         }
 
-        // 2. Perform Update
+        // 2. update now
         \Illuminate\Support\Facades\DB::table('user_skills')
             ->where('id', $id)
             ->where('user_id', $userId)

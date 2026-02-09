@@ -3,9 +3,7 @@
 @section('title', 'My Profile | Uni-Serve')
 
 @push('styles')
-    <style>
-        /* Add any profile-specific styles here if needed */
-    </style>
+    <link rel="stylesheet" href="{{ asset('assets/css/profile.css') }}">
 @endpush
 
 @section('content')
@@ -13,11 +11,9 @@
         <div class="profile-header-container">
             <h2 style="margin:0;">My Profile</h2>
             @if (Auth::user()->role === 'resident')
-                <span class="badge badge-primary"
-                    style="background:#007bff; color:white; padding:5px 10px; border-radius:4px;">Service Provider</span>
+                <span class="badge badge-primary profile-badge badge-provider">Service Provider</span>
             @elseif (Auth::user()->role === 'seeker')
-                <span class="badge badge-secondary"
-                    style="background:#6c757d; color:white; padding:5px 10px; border-radius:4px;">Service Seeker</span>
+                <span class="badge badge-secondary profile-badge badge-seeker">Service Seeker</span>
             @endif
         </div>
 
@@ -52,42 +48,37 @@
                         @if (!empty($profile->profile_picture))
                             <img src="{{ asset($profile->profile_picture) }}" alt="Profile Picture" class="profile-img-main">
                         @else
-                            <div
-                                style="width: 100%; height: 100%; border-radius: 50%; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; border: 4px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.15);">
-                                <span style="color: #888; font-size: 3rem;"><i class="fas fa-user"></i></span>
+                            <div class="profile-img-placeholder">
+                                <span class="profile-icon"><i class="fas fa-user"></i></span>
                             </div>
                         @endif
                     </div>
 
                     <h3 style="margin-bottom: 5px;">
                         {{ $profile->full_name ?? Auth::user()->username }}
-                        @if(\App\Models\ProviderVerification::where('user_id', Auth::id())->where('status', 'approved')->exists())
-                            <i class="fas fa-check-circle" style="color: #007bff; font-size: 0.8em;"
+                        @if($verification && $verification->status === 'approved')
+                            <i class="fas fa-check-circle verified-icon"
                                 title="Verified Provider"></i>
                         @endif
                     </h3>
-                    <p style="color:#777; margin-top:0;">{{ ucfirst(Auth::user()->role) }}</p>
+                    <p class="role-text">{{ ucfirst(Auth::user()->role) }}</p>
 
                     <div class="upload-btn-wrapper">
-                        <button type="button" class="btn"
-                            style="border: 2px solid var(--accent-blue); color: var(--accent-blue); background: transparent; padding: 8px 20px; border-radius: 20px; font-weight: 600;">
+                        <button type="button" class="btn change-photo-btn">
                             <i class="fas fa-camera"></i> Change Photo
                         </button>
                         <input type="file" name="profile_picture" id="profile_picture" accept="image/*"
-                            style="position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer;"
+                            class="file-input"
                             onchange="document.querySelector('.file-name').textContent = this.files[0].name; document.querySelector('.file-name').style.display='block';">
                     </div>
-                    <div class="file-name" style="font-size: 0.85em; color: #555; margin-top: 10px; display:none;"></div>
+                    <div class="file-name file-name-display"></div>
 
                     @if(Auth::user()->role !== 'admin')
                         <div class="mt-4 text-center">
-                            @php
-                                $verification = \App\Models\ProviderVerification::where('user_id', Auth::id())->first();
-                            @endphp
+                            {{-- Verification status logic handled in controller --}}
 
                             @if(!$verification)
-                                <a href="{{ route('verification.show') }}" class="btn btn-outline-primary btn-sm"
-                                    style="border-radius: 20px; font-weight: 600;">
+                                <a href="{{ route('verification.show') }}" class="btn btn-outline-primary btn-sm btn-verify">
                                     <i class="fas fa-check-circle"></i> Verify My Account
                                 </a>
                             @elseif($verification->status === 'pending')
@@ -95,8 +86,7 @@
                             @elseif($verification->status === 'approved')
                                 <div class="badge badge-success p-2"><i class="fas fa-check-double"></i> Account Verified</div>
                             @elseif($verification->status === 'rejected')
-                                <a href="{{ route('verification.show') }}" class="btn btn-outline-danger btn-sm"
-                                    style="border-radius: 20px; font-weight: 600;">
+                                <a href="{{ route('verification.show') }}" class="btn btn-outline-danger btn-sm btn-verify">
                                     <i class="fas fa-exclamation-circle"></i> Verification Rejected (Retry)
                                 </a>
                             @endif
@@ -156,17 +146,16 @@
                     @if (Auth::user()->role !== 'seeker')
                         <div style="margin-top: 25px;">
                             <label style="margin-bottom: 10px; display: block;">Pin Location on Map</label>
-                            <div id="map" style="width: 100%; border-radius: 8px;"></div>
-                            <p style="font-size: 0.9rem; color: #666; margin-top: 8px;">
-                                <i class="fas fa-info-circle"></i> Click on the map to set your exact location for service
-                                seekers nearby.
-                            </p>
+                             <div id="map" class="map-container"></div>
+                             <p class="map-info">
+                                 <i class="fas fa-info-circle"></i> Click on the map to set your exact location for service
+                                 seekers nearby.
+                             </p>
                         </div>
 
                         <!-- Accomplishments Section -->
                         <div style="margin-top: 35px; border-top: 1px solid #eee; padding-top: 25px;">
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <div class="accomplishments-header">
                                 <h3 class="form-section-title" style="margin: 0;">My Accomplishments</h3>
                                 @if($accomplishments->count() < 7)
                                     <button type="button" onclick="document.getElementById('uploadModal').style.display='block'"
@@ -179,14 +168,13 @@
                                 @endif
                             </div>
 
-                            <div style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px;">
+                            <div class="accomplishments-scroll">
                                 @forelse($accomplishments as $item)
-                                    <div style="position: relative; flex: 0 0 auto; width: 220px;">
-                                        <img src="{{ asset($item->image_path) }}" alt="Accomplishment"
-                                            style="width: 100%; height: 140px; object-fit: cover; border-radius: 8px;">
+                                    <div class="accomplishment-item">
+                                        <img src="{{ asset($item->image_path) }}" alt="Accomplishment" class="accomplishment-img">
 
                                         <button type="submit" form="delete-form-{{ $item->id }}"
-                                            style="position: absolute; top: 5px; right: 5px; background: rgba(220, 53, 69, 0.9); color: white; border: none; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.3s;"
+                                            class="delete-btn"
                                             onclick="return confirm('Remove this image?')" title="Delete">
                                             <i class="fas fa-trash" style="font-size: 0.8em;"></i>
                                         </button>
@@ -204,8 +192,7 @@
                     @endif
 
                     <div style="margin-top: 30px; text-align: right;">
-                        <button type="submit" class="btn-primary"
-                            style="padding: 12px 30px; font-size: 1rem; border-radius: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <button type="submit" class="btn-primary save-btn">
                             <i class="fas fa-save"></i> Save Changes
                         </button>
                     </div>

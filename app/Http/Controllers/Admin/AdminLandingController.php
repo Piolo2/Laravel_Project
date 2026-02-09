@@ -46,10 +46,10 @@ class AdminLandingController extends Controller
         $total_services = UserSkill::count();
         $total_verified_providers = \App\Models\ProviderVerification::where('status', 'approved')->count();
 
-        // Get recent 5 users
+        // get recent 5 users
         $recent_users = User::latest()->take(5)->get();
 
-        // Skill Distribution
+        // skill distribution for chart
         $skill_dist = DB::table('skill_categories as c')
             ->leftJoin('skills as s', 'c.id', '=', 's.category_id')
             ->leftJoin('user_skills as us', 's.id', '=', 'us.skill_id')
@@ -60,12 +60,12 @@ class AdminLandingController extends Controller
 
         // CHART DATA
 
-        // Initialize chart data structure
+        // chart data init
         $monthly_users = ['labels' => [], 'data' => []];
         $request_stats = ['labels' => [], 'data' => []];
         $role_stats = ['labels' => [], 'data' => []];
 
-        // 1. Monthly User Registration
+        // 1. monthly user registration
         $userRange = $filters['user_range'] ?? '30d';
         $userStartDate = $this->getStartDate($userRange);
 
@@ -75,7 +75,7 @@ class AdminLandingController extends Controller
         }
         $monthly_users_data = $query->groupBy(DB::raw('DATE(created_at)'))->orderBy(DB::raw('DATE(created_at)'), 'asc')->get();
 
-        // Fill dates
+        // fill missing dates
         if ($userRange !== 'all' && $userRange !== 'year') {
             $start = $userStartDate ?: now()->subDays(30);
             $period = \Carbon\CarbonPeriod::create($start, now());
@@ -101,7 +101,7 @@ class AdminLandingController extends Controller
             }
         }
 
-        // 2. Service Request Status Distribution
+        // 2. service request status distribution
         $requestRange = $filters['request_range'] ?? '30d';
         $requestStartDate = $this->getStartDate($requestRange);
 
@@ -116,7 +116,7 @@ class AdminLandingController extends Controller
             $request_stats['data'][] = $stat->count;
         }
 
-        // 3. User Role Distribution
+        // 3. user role distribution
         $roleRange = $filters['role_range'] ?? '30d';
         $roleStartDate = $this->getStartDate($roleRange);
 
@@ -138,7 +138,7 @@ class AdminLandingController extends Controller
             $role_stats['data'][] = $stat->count;
         }
 
-        // Explicitly build return array
+        // explicitly build return array
         $dashboardData = [];
         $dashboardData['total_residents'] = $total_residents;
         $dashboardData['total_seekers'] = $total_seekers;

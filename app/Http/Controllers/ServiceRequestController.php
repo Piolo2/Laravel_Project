@@ -12,56 +12,27 @@ class ServiceRequestController extends Controller
     {
         $user = Auth::user();
 
-        // Get active requests
+        // query request with same status - use 'with' so it wont load slow (n+1)
         $active_requests_data = $user->serviceRequestsAsSeeker()
             ->with('provider.profile')
             ->whereIn('status', ['Accepted'])
             ->get();
 
-        $active_requests = [];
-        foreach ($active_requests_data as $req) {
-            if ($req->provider && $req->provider->profile) {
-                $req->provider_name = $req->provider->profile->full_name;
-                $req->provider_contact = $req->provider->profile->contact_number;
-            } else {
-                $req->provider_name = $req->provider->username;
-                $req->provider_contact = 'N/A';
-            }
-            $active_requests[] = $req;
-        }
-
-        // Get pending requests
         $pending_requests_data = $user->serviceRequestsAsSeeker()
             ->with('provider.profile')
             ->where('status', 'Pending')
             ->get();
 
-        $pending_requests = [];
-        foreach ($pending_requests_data as $req) {
-            if ($req->provider && $req->provider->profile) {
-                $req->provider_name = $req->provider->profile->full_name;
-            } else {
-                $req->provider_name = $req->provider->username;
-            }
-            $pending_requests[] = $req;
-        }
-
-        // Get history requests
         $history_requests_data = $user->serviceRequestsAsSeeker()
             ->with('provider.profile')
             ->whereIn('status', ['Completed', 'Declined', 'Cancelled'])
             ->orderBy('updated_at', 'desc')
             ->get();
 
-        $history_requests = [];
-        foreach ($history_requests_data as $req) {
-            if ($req->provider && $req->provider->profile) {
-                $req->provider_name = $req->provider->profile->full_name;
-            } else {
-                $req->provider_name = $req->provider->username;
-            }
-            $history_requests[] = $req;
-        }
+        // Format data for view
+        $active_requests = $this->formatRequests($active_requests_data, 'provider');
+        $pending_requests = $this->formatRequests($pending_requests_data, 'provider');
+        $history_requests = $this->formatRequests($history_requests_data, 'provider');
 
         return view('seeker_requests', compact('active_requests', 'pending_requests', 'history_requests'));
     }
@@ -70,62 +41,56 @@ class ServiceRequestController extends Controller
     {
         $user = Auth::user();
 
-        // Get pending requests
         $pending_requests_data = $user->serviceRequestsAsProvider()
             ->with('seeker.profile')
             ->where('status', 'Pending')
             ->get();
 
-        $pending_requests = [];
-        foreach ($pending_requests_data as $req) {
-            if ($req->seeker && $req->seeker->profile) {
-                $req->seeker_name = $req->seeker->profile->full_name;
-                $req->seeker_contact = $req->seeker->profile->contact_number;
-                $req->seeker_address = $req->seeker->profile->address;
-            } else {
-                $req->seeker_name = $req->seeker->username;
-                $req->seeker_contact = 'N/A';
-                $req->seeker_address = 'N/A';
-            }
-            $pending_requests[] = $req;
-        }
-
-        // Get ongoing requests
         $ongoing_requests_data = $user->serviceRequestsAsProvider()
             ->with('seeker.profile')
             ->where('status', 'Accepted')
             ->get();
 
-        $ongoing_requests = [];
-        foreach ($ongoing_requests_data as $req) {
-            if ($req->seeker && $req->seeker->profile) {
-                $req->seeker_name = $req->seeker->profile->full_name;
-                $req->seeker_contact = $req->seeker->profile->contact_number;
-            } else {
-                $req->seeker_name = $req->seeker->username;
-                $req->seeker_contact = 'N/A';
-            }
-            $ongoing_requests[] = $req;
-        }
-
-        // Get history requests
         $history_requests_data = $user->serviceRequestsAsProvider()
             ->with('seeker.profile')
             ->whereIn('status', ['Declined', 'Completed', 'Cancelled'])
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $history_requests = [];
-        foreach ($history_requests_data as $req) {
-            if ($req->seeker && $req->seeker->profile) {
-                $req->seeker_name = $req->seeker->profile->full_name;
-            } else {
-                $req->seeker_name = $req->seeker->username;
-            }
-            $history_requests[] = $req;
-        }
+        $pending_requests = $this->formatRequests($pending_requests_data, 'seeker');
+        $ongoing_requests = $this->formatRequests($ongoing_requests_data, 'seeker');
+        $history_requests = $this->formatRequests($history_requests_data, 'seeker');
 
         return view('provider_requests', compact('pending_requests', 'ongoing_requests', 'history_requests'));
+    }
+
+    /**
+     * function to fix the data request format with name and contact.
+     * i make this manual because its confusing the relationship of user and profile.
+     */
+    private function formatRequests($requests, $relation)
+    {
+        $formatted = [];
+        // foreach request to put the name/address correct
+        foreach ($requests as $req) {
+            $user = $req->$relation;
+
+            if ($user && $user->profile) {
+                $req->{$relation . '_name'} = $user->profile->full_name;
+                $req->{$relation . '_contact'} = $user->profile->contact_number;
+                if ($relation === 'seeker') {
+                    $req->seeker_address = $user->profile->address;
+                }
+            } else {
+                $req->{$relation . '_name'} = $user->username ?? 'Unknown';
+                $req->{$relation . '_contact'} = 'N/A';
+                if ($relation === 'seeker') {
+                    $req->seeker_address = 'N/A';
+                }
+            }
+            $formatted[] = $req;
+        }
+        return $formatted;
     }
 
     public function store(Request $request)
@@ -135,7 +100,7 @@ class ServiceRequestController extends Controller
                 'required',
                 'exists:users,id',
                 function ($attribute, $value, $fail) {
-                    // Check if the user is a resident
+                    // validations: check if provider is really a 'resident' role
                     $isResident = \App\Models\User::where('id', $value)->where('role', 'resident')->exists();
                     if (!$isResident) {
                         $fail('The selected provider is invalid.');
@@ -146,15 +111,13 @@ class ServiceRequestController extends Controller
             'notes' => 'nullable|string'
         ]);
 
-        $input = [
+        ServiceRequest::create([
             'seeker_id' => Auth::id(),
             'provider_id' => $request->provider_id,
             'service_date' => $request->service_date,
             'notes' => $request->notes,
             'status' => 'Pending'
-        ];
-
-        ServiceRequest::create($input);
+        ]);
 
         return back()->with('success', 'Service request sent successfully!');
     }
@@ -166,42 +129,28 @@ class ServiceRequestController extends Controller
             'status' => 'required|in:Accepted,Declined,Completed,Cancelled'
         ]);
 
-        $status = $request->status;
         $serviceRequest = ServiceRequest::findOrFail($request->request_id);
 
-        // Check if user is allowed to update
-        $provider_id = $serviceRequest->provider_id;
-        $seeker_id = $serviceRequest->seeker_id;
-        $current_user_id = Auth::id();
-
-        if ($provider_id !== $current_user_id) {
-            if ($seeker_id !== $current_user_id) {
-                abort(403);
-            }
+        // Authorization check
+        if ($serviceRequest->provider_id !== Auth::id() && $serviceRequest->seeker_id !== Auth::id()) {
+            abort(403);
         }
 
-        // Check if request is already finished
-        $is_completed = ($serviceRequest->status == 'Completed');
-        $is_declined = ($serviceRequest->status == 'Declined');
-        $is_cancelled = ($serviceRequest->status == 'Cancelled');
-
-        if ($is_completed || $is_declined || $is_cancelled) {
-            if ($request->ajax()) {
-                return response()->json(['success' => false, 'message' => 'Cannot update a finalized request.']);
-            }
-            return back()->with('error', 'Cannot update a finalized request.');
+        // dont allow update if request is already done or cancel
+        if (in_array($serviceRequest->status, ['Completed', 'Declined', 'Cancelled'])) {
+            $msg = 'Cannot update a finalized request.';
+            return $request->ajax()
+                ? response()->json(['success' => false, 'message' => $msg])
+                : back()->with('error', $msg);
         }
 
-        // Update status
-        $serviceRequest->status = $status;
+        $serviceRequest->status = $request->status;
         $serviceRequest->save();
 
-        if ($request->ajax()) {
-            return response()->json(['success' => true, 'message' => "Request status updated to $status."]);
-        }
-
-        return back()->with('msg', "Request status updated to $status.");
-
+        $msg = "Request status updated to {$request->status}.";
+        return $request->ajax()
+            ? response()->json(['success' => true, 'message' => $msg])
+            : back()->with('msg', $msg);
     }
 
     public function bulkDelete(Request $request)
@@ -211,12 +160,9 @@ class ServiceRequestController extends Controller
             'ids.*' => 'exists:service_requests,id',
         ]);
 
-        $user_id = Auth::id();
-
-        // Ensure records belong to logged-in user to prevent unauthorized deletion
         $deleted = ServiceRequest::whereIn('id', $request->ids)
-            ->where('seeker_id', $user_id)
-            ->whereIn('status', ['Completed', 'Declined', 'Cancelled']) // Only allow deleting history items
+            ->where('seeker_id', Auth::id())
+            ->whereIn('status', ['Completed', 'Declined', 'Cancelled'])
             ->delete();
 
         return response()->json([

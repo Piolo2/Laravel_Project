@@ -28,7 +28,7 @@ class SearchController extends Controller
 
     public function getMarkers()
     {
-        // Get raw profiles with relations
+        // get raw profiles with relations to user skills
         $profiles = Profile::has('user')->with(['user.skills'])
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
@@ -37,14 +37,14 @@ class SearchController extends Controller
 
         $markers = [];
         foreach ($profiles as $profile) {
-            // Determine user role label
+            // know the role label
             if ($profile->user->role === 'resident') {
                 $roleLabel = 'Resident, Service Provider';
             } else {
                 $roleLabel = 'Service Seeker';
             }
 
-            // Manually build skills string
+            // build skills string manually
             $skillNames = [];
             foreach ($profile->user->skills as $skill) {
                 $skillNames[] = $skill->name;

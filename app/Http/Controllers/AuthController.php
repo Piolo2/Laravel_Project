@@ -68,7 +68,7 @@ class AuthController extends Controller
         $role = \App\Models\Role::where('slug', $request->role)->first();
         $role_id = $role ? $role->id : null;
 
-        // Manually prepare user data
+        // prepare user data array
         $userData = [
             'username' => $request->username,
             'email' => $request->email,
@@ -79,7 +79,7 @@ class AuthController extends Controller
 
         $user = User::create($userData);
 
-        // Manually prepare profile data
+        // make profile data array
         $profileData = [
             'user_id' => $user->id,
             'full_name' => $request->full_name,

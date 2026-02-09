@@ -23,76 +23,94 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
-    // Dashboards & Profile
+    /*
+    |--------------------------------------------------------------------------
+    | User Dashboards & Profile
+    |--------------------------------------------------------------------------
+    */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/view-profile/{id}', [ProfileController::class, 'viewProfile'])->name('view_profile');
 
+    // Role-based Landing Pages
     Route::get('/service-provider', [\App\Http\Controllers\Provider\ProviderLandingController::class, 'index'])->name('service_provider');
     Route::get('/service-seeker', [\App\Http\Controllers\Seeker\SeekerLandingController::class, 'index'])->name('service_seeker');
 
-    Route::get('/view-profile/{id}', [ProfileController::class, 'viewProfile'])->name('view_profile');
-
-    // Search
+    /*
+    |--------------------------------------------------------------------------
+    | Services Features (Search, Skills, Requests)
+    |--------------------------------------------------------------------------
+    */
+    // search
     Route::get('/search', [SearchController::class, 'index'])->name('search');
 
-    // Skills
-    Route::get('/services', [SkillController::class, 'index'])->name('services');
-    Route::post('/services/add', [SkillController::class, 'store'])->name('services.add');
-    Route::post('/services/toggle/{id}/{status}', [SkillController::class, 'toggle'])->name('services.toggle');
-    Route::delete('/services/{id}', [SkillController::class, 'destroy'])->name('services.delete');
+    // skills CRUD
+    Route::prefix('services')->name('services.')->group(function () {
+        Route::get('/', [SkillController::class, 'index'])->name('index'); // services
+        Route::post('/add', [SkillController::class, 'store'])->name('add');
+        Route::post('/toggle/{id}/{status}', [SkillController::class, 'toggle'])->name('toggle');
+        Route::delete('/{id}', [SkillController::class, 'destroy'])->name('delete');
+    });
 
-    // Service Requests
-    Route::get('/requests', [ServiceRequestController::class, 'providerIndex'])->name('requests');
-    Route::get('/my-requests', [ServiceRequestController::class, 'seekerIndex'])->name('my_requests');
+    // Requests
+    Route::prefix('requests')->group(function () {
+        Route::get('/', [ServiceRequestController::class, 'providerIndex'])->name('requests');
+        Route::get('/my-requests', [ServiceRequestController::class, 'seekerIndex'])->name('my_requests'); // path for seekers
+        Route::post('/store', [ServiceRequestController::class, 'store'])->name('requests.store');
+        Route::post('/update', [ServiceRequestController::class, 'update'])->name('requests.update');
+    });
+    // this needs seperate route for bulk delete
     Route::post('/service-requests/bulk-delete', [ServiceRequestController::class, 'bulkDelete'])->name('requests.bulk_delete');
-    Route::post('/requests/store', [ServiceRequestController::class, 'store'])->name('requests.store');
-    Route::post('/requests/update', [ServiceRequestController::class, 'update'])->name('requests.update');
 
-    // Admin
-    Route::get('/admin/api/stats', [\App\Http\Controllers\Admin\AdminLandingController::class, 'getStats'])->name('admin.stats.api');
-    Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\AdminLandingController::class, 'index'])->name('admin.dashboard');
-
-    // Admin Users
-    Route::get('/admin/users', [\App\Http\Controllers\Admin\AdminUserController::class, 'index'])->name('admin.users.index');
-    Route::get('/admin/users/{id}', [\App\Http\Controllers\Admin\AdminUserController::class, 'show'])->name('admin.users.show');
-    Route::put('/admin/users/{id}', [\App\Http\Controllers\Admin\AdminUserController::class, 'update'])->name('admin.users.update');
-    Route::delete('/admin/users/{id}', [\App\Http\Controllers\Admin\AdminUserController::class, 'destroy'])->name('admin.users.destroy');
-    Route::post('/admin/users/{id}/verify', [\App\Http\Controllers\Admin\AdminUserController::class, 'approveVerification'])->name('admin.users.verify');
-    Route::post('/admin/users/{id}/reject', [\App\Http\Controllers\Admin\AdminUserController::class, 'rejectVerification'])->name('admin.users.reject');
-
-    // Admin Reports
-    Route::get('/admin/reports', [\App\Http\Controllers\Admin\AdminReportController::class, 'index'])->name('admin.reports.index');
-    Route::get('/admin/reports/users', [\App\Http\Controllers\Admin\AdminReportController::class, 'users'])->name('admin.reports.users');
-    Route::get('/admin/reports/requests', [\App\Http\Controllers\Admin\AdminReportController::class, 'requests'])->name('admin.reports.requests');
-    Route::get('/admin/reports/export/users', [\App\Http\Controllers\Admin\AdminReportController::class, 'exportUsers'])->name('admin.reports.export.users');
-    Route::get('/admin/reports/export/requests', [\App\Http\Controllers\Admin\AdminReportController::class, 'exportRequests'])->name('admin.reports.export.requests');
-
-    // Admin Skills
-    Route::get('/admin/skills', [\App\Http\Controllers\Admin\AdminSkillController::class, 'index'])->name('admin.skills.index');
-    Route::post('/admin/skills', [\App\Http\Controllers\Admin\AdminSkillController::class, 'store'])->name('admin.skills.store');
-    Route::put('/admin/skills/{id}', [\App\Http\Controllers\Admin\AdminSkillController::class, 'update'])->name('admin.skills.update');
-    Route::delete('/admin/skills/{id}', [\App\Http\Controllers\Admin\AdminSkillController::class, 'destroy'])->name('admin.skills.destroy');
-    Route::post('/admin/categories', [\App\Http\Controllers\Admin\AdminSkillController::class, 'storeCategory'])->name('admin.categories.store');
-
-    // Admin Announcements
-    Route::resource('/admin/announcements', \App\Http\Controllers\Admin\AdminAnnouncementController::class)->names([
-        'index' => 'admin.announcements.index',
-        'create' => 'admin.announcements.create',
-        'store' => 'admin.announcements.store',
-        'edit' => 'admin.announcements.edit',
-        'update' => 'admin.announcements.update',
-        'destroy' => 'admin.announcements.destroy',
-    ]);
-    // Service Provider Verification
+    // Verification & Reviews
     Route::get('/verification', [VerificationController::class, 'show'])->name('verification.show');
     Route::post('/verification', [VerificationController::class, 'store'])->name('verification.store');
 
-    // Accomplishments
     Route::post('/accomplishments', [\App\Http\Controllers\AccomplishmentController::class, 'store'])->name('accomplishments.store');
     Route::delete('/accomplishments/{id}', [\App\Http\Controllers\AccomplishmentController::class, 'destroy'])->name('accomplishments.destroy');
 
-    // Reviews
     Route::post('/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Panel Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('admin')->name('admin.')->group(function () {
+
+        // Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Admin\AdminLandingController::class, 'index'])->name('dashboard');
+        Route::get('/api/stats', [\App\Http\Controllers\Admin\AdminLandingController::class, 'getStats'])->name('stats.api');
+
+        // User Management
+        Route::prefix('users')->name('users.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\AdminUserController::class, 'index'])->name('index');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\AdminUserController::class, 'show'])->name('show');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\AdminUserController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\AdminUserController::class, 'destroy'])->name('destroy');
+            Route::post('/{id}/verify', [\App\Http\Controllers\Admin\AdminUserController::class, 'approveVerification'])->name('verify');
+            Route::post('/{id}/reject', [\App\Http\Controllers\Admin\AdminUserController::class, 'rejectVerification'])->name('reject');
+        });
+
+        // Reports
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\AdminReportController::class, 'index'])->name('index');
+            Route::get('/users', [\App\Http\Controllers\Admin\AdminReportController::class, 'users'])->name('users');
+            Route::get('/requests', [\App\Http\Controllers\Admin\AdminReportController::class, 'requests'])->name('requests');
+            Route::get('/export/users', [\App\Http\Controllers\Admin\AdminReportController::class, 'exportUsers'])->name('export.users');
+            Route::get('/export/requests', [\App\Http\Controllers\Admin\AdminReportController::class, 'exportRequests'])->name('export.requests');
+        });
+
+        // Skills & Categories
+        Route::get('/skills', [\App\Http\Controllers\Admin\AdminSkillController::class, 'index'])->name('skills.index');
+        Route::post('/skills', [\App\Http\Controllers\Admin\AdminSkillController::class, 'store'])->name('skills.store');
+        Route::put('/skills/{id}', [\App\Http\Controllers\Admin\AdminSkillController::class, 'update'])->name('skills.update');
+        Route::delete('/skills/{id}', [\App\Http\Controllers\Admin\AdminSkillController::class, 'destroy'])->name('skills.destroy');
+        Route::post('/categories', [\App\Http\Controllers\Admin\AdminSkillController::class, 'storeCategory'])->name('categories.store');
+
+        // Announcements (Resource Route)
+        Route::resource('announcements', \App\Http\Controllers\Admin\AdminAnnouncementController::class);
+    });
 });
 
 

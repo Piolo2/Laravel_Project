@@ -57,7 +57,10 @@ class ProfileController extends Controller
         }
         $barangays = $this->barangays;
         $accomplishments = Auth::user()->accomplishments()->latest()->get();
-        return view('profile', compact('profile', 'barangays', 'accomplishments'));
+        // query if user is verified provider status
+        $verification = \App\Models\ProviderVerification::where('user_id', Auth::id())->first();
+
+        return view('profile', compact('profile', 'barangays', 'accomplishments', 'verification'));
     }
 
     public function update(Request $request)
@@ -103,7 +106,7 @@ class ProfileController extends Controller
     {
         $profile = Profile::with('user.providerVerification')->where('user_id', $id)->firstOrFail();
 
-        // Get all skills and filter manually
+        // get all skills then filter passing ones
         $all_skills = $profile->user->skills;
         $skills = [];
         foreach ($all_skills as $skill) {
@@ -114,7 +117,7 @@ class ProfileController extends Controller
 
         $reviews = $profile->user->reviewsReceived()->with('seeker.profile')->latest()->get();
 
-        // Calculate average rating manually
+        // compute average rating using loop
         $total_rating = 0;
         $reviewCount = 0;
         foreach ($reviews as $review) {
@@ -132,7 +135,7 @@ class ProfileController extends Controller
 
         return view('view_profile', [
             'profile' => $profile,
-            'skills' => $skills, // Now a simple array of names
+            'skills' => $skills, // pass simple array
             'provider_id' => $id,
             'reviews' => $reviews,
             'averageRating' => $averageRating,

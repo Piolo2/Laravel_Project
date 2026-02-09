@@ -12,7 +12,7 @@
             </h1>
             <p>Your skills help build a better Unisan. Manage your services and keep your availability updated.</p>
             <div style="margin-top: 20px;">
-                <a href="{{ route('services') }}" class="btn btn-accent">Manage Services</a>
+                <a href="{{ route('services.index') }}" class="btn btn-accent">Manage Services</a>
                 <a href="{{ route('profile') }}" class="btn btn-outline-white">Edit Profile</a>
             </div>
         </div>
@@ -43,5 +43,6 @@
                 @endif
             </div>
         </div>
+
     </section>
 @endsection

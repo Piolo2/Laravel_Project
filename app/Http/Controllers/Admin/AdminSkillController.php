@@ -23,7 +23,7 @@ class AdminSkillController extends Controller
             'category_id' => 'required|exists:skill_categories,id',
         ]);
 
-        // Explicitly build data array
+        // build data array manually
         $skillData = [];
         $skillData['name'] = $validated['name'];
         $skillData['category_id'] = $validated['category_id'];
@@ -42,7 +42,7 @@ class AdminSkillController extends Controller
             'category_id' => 'required|exists:skill_categories,id',
         ]);
 
-        // Explicitly build update data
+        // build update data
         $updateData = [];
         $updateData['name'] = $validated['name'];
         $updateData['category_id'] = $validated['category_id'];
@@ -60,7 +60,7 @@ class AdminSkillController extends Controller
         return redirect()->route('admin.skills.index')->with('success', 'Skill deleted successfully.');
     }
 
-    // Category Management methods could also go here or in a separate controller
+    // category management
     public function storeCategory(Request $request)
     {
         $validated = $request->validate(['name' => 'required|string|max:255|unique:skill_categories']);

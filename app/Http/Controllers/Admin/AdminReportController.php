@@ -12,7 +12,7 @@ class AdminReportController extends Controller
 {
     public function index()
     {
-        // General Stats for Dashboard/Reports Landing
+        // admin dashboard stats
         $stats = [
             'total_users' => User::count(),
             'total_requests' => ServiceRequest::count(),
@@ -25,7 +25,7 @@ class AdminReportController extends Controller
 
     public function users()
     {
-        // User growth or role distribution
+        // role distribution query
         $roles_distribution = User::select('role', DB::raw('count(*) as total'))
             ->groupBy('role')
             ->get();
@@ -35,7 +35,7 @@ class AdminReportController extends Controller
 
     public function requests()
     {
-        // Request status distribution
+        // status distribution query
         $status_distribution = ServiceRequest::select('status', DB::raw('count(*) as total'))
             ->groupBy('status')
             ->get();
@@ -58,7 +58,7 @@ class AdminReportController extends Controller
                 foreach ($users as $user) {
                     $name = $user->profile->full_name ?? $user->username;
 
-                    // Explicitly build row
+                    // build row explicitly
                     $row = [];
                     $row[] = $user->id;
                     $row[] = $name;
@@ -99,7 +99,7 @@ class AdminReportController extends Controller
                         $providerName = $request->provider->profile->full_name ?? $request->provider->username;
                     }
 
-                    // Explicitly build row
+                    // build csv row
                     $row = [];
                     $row[] = $request->id;
                     $row[] = $seekerName;

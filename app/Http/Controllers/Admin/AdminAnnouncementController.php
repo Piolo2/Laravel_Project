@@ -37,7 +37,7 @@ class AdminAnnouncementController extends Controller
             $imagePath = 'images/announcements/' . $filename;
         }
 
-        // Manually build data array
+        // manual build array for data
         $announcementData = [];
         $announcementData['title'] = $validated['title'];
         $announcementData['image_path'] = $imagePath;
@@ -74,7 +74,7 @@ class AdminAnnouncementController extends Controller
             'deadline' => 'required|date|after_or_equal:date_posted',
         ]);
 
-        // Manually build update data
+        // manual build update array
         $updateData = [];
         $updateData['title'] = $validated['title'];
 
@@ -88,9 +88,9 @@ class AdminAnnouncementController extends Controller
         $updateData['date_posted'] = $validated['date_posted'];
         $updateData['deadline'] = $validated['deadline'];
 
-        // Handle Image Update Explicitly
+        // handle image update explicitly
         if ($request->hasFile('image')) {
-            // 1. Check and delete old image
+            // 1. check and delete old image
             if ($announcement->image_path) {
                 $oldPath = public_path($announcement->image_path);
                 if (file_exists($oldPath)) {
@@ -98,12 +98,12 @@ class AdminAnnouncementController extends Controller
                 }
             }
 
-            // 2. Upload new image
+            // 2. upload new image
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('images/announcements'), $filename);
 
-            // 3. Add to update data
+            // 3. add to update data
             $updateData['image_path'] = 'images/announcements/' . $filename;
         }
 
@@ -116,7 +116,7 @@ class AdminAnnouncementController extends Controller
     {
         $announcement = \App\Models\Announcement::findOrFail($id);
 
-        // Explicitly check and delete image
+        // explicitly check and delete image
         if ($announcement->image_path) {
             $fullPath = public_path($announcement->image_path);
             if (file_exists($fullPath)) {

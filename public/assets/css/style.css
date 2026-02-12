@@ -1522,3 +1522,5 @@ button.btn-primary {
     background-color: #e2e3e5;
     color: #383d41;
 }
+* { border-radius: 0 !important; }
+

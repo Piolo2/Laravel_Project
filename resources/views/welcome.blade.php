@@ -30,7 +30,7 @@
 
         .main-card {
             background: white;
-            border-radius: 1rem;
+
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             overflow: hidden;
             max-width: 900px;
@@ -52,7 +52,7 @@
         .btn-laravel {
             background-color: #1b1b18;
             color: white;
-            border-radius: 0.375rem;
+
             padding: 0.5rem 1.5rem;
             text-decoration: none;
             transition: all 0.2s;
@@ -82,7 +82,7 @@
             width: 1rem;
             height: 1rem;
             background-color: #dbdbd7;
-            border-radius: 50%;
+
             flex-shrink: 0;
         }
     </style>

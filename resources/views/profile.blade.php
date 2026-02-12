@@ -57,8 +57,7 @@
                     <h3 style="margin-bottom: 5px;">
                         {{ $profile->full_name ?? Auth::user()->username }}
                         @if($verification && $verification->status === 'approved')
-                            <i class="fas fa-check-circle verified-icon"
-                                title="Verified Provider"></i>
+                            <i class="fas fa-check-circle verified-icon" title="Verified Provider"></i>
                         @endif
                     </h3>
                     <p class="role-text">{{ ucfirst(Auth::user()->role) }}</p>
@@ -67,8 +66,7 @@
                         <button type="button" class="btn change-photo-btn">
                             <i class="fas fa-camera"></i> Change Photo
                         </button>
-                        <input type="file" name="profile_picture" id="profile_picture" accept="image/*"
-                            class="file-input"
+                        <input type="file" name="profile_picture" id="profile_picture" accept="image/*" class="file-input"
                             onchange="document.querySelector('.file-name').textContent = this.files[0].name; document.querySelector('.file-name').style.display='block';">
                     </div>
                     <div class="file-name file-name-display"></div>
@@ -122,7 +120,7 @@
                     <div class="form-group">
                         <label>Barangay (Unisan, Quezon) <span style="color:red;">*</span></label>
                         <select name="address" id="barangaySelect" required
-                            style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                            style="width: 100%; padding: 10px; border: 1px solid #ccc;">
                             <option value="">-- Select Barangay --</option>
                             @foreach($barangays as $brgy)
                                 @php
@@ -146,11 +144,11 @@
                     @if (Auth::user()->role !== 'seeker')
                         <div style="margin-top: 25px;">
                             <label style="margin-bottom: 10px; display: block;">Pin Location on Map</label>
-                             <div id="map" class="map-container"></div>
-                             <p class="map-info">
-                                 <i class="fas fa-info-circle"></i> Click on the map to set your exact location for service
-                                 seekers nearby.
-                             </p>
+                            <div id="map" class="map-container"></div>
+                            <p class="map-info">
+                                <i class="fas fa-info-circle"></i> Click on the map to set your exact location for service
+                                seekers nearby.
+                            </p>
                         </div>
 
                         <!-- Accomplishments Section -->
@@ -159,8 +157,7 @@
                                 <h3 class="form-section-title" style="margin: 0;">My Accomplishments</h3>
                                 @if($accomplishments->count() < 7)
                                     <button type="button" onclick="document.getElementById('uploadModal').style.display='block'"
-                                        class="btn-outline-primary"
-                                        style="padding: 5px 15px; border-radius: 20px; font-size: 0.9em;">
+                                        class="btn-outline-primary" style="padding: 5px 15px; font-size: 0.9em;">
                                         <i class="fas fa-plus"></i> Add New
                                     </button>
                                 @else
@@ -173,8 +170,7 @@
                                     <div class="accomplishment-item">
                                         <img src="{{ asset($item->image_path) }}" alt="Accomplishment" class="accomplishment-img">
 
-                                        <button type="submit" form="delete-form-{{ $item->id }}"
-                                            class="delete-btn"
+                                        <button type="submit" form="delete-form-{{ $item->id }}" class="delete-btn"
                                             onclick="return confirm('Remove this image?')" title="Delete">
                                             <i class="fas fa-trash" style="font-size: 0.8em;"></i>
                                         </button>
@@ -205,7 +201,7 @@
     <div id="uploadModal" class="modal"
         style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5);">
         <div class="modal-content"
-            style="background-color: #fefefe; margin: 15% auto; padding: 25px; border: 1px solid #888; width: 90%; max-width: 500px; border-radius: 12px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            style="background-color: #fefefe; margin: 15% auto; padding: 25px; border: 1px solid #888; width: 90%; max-width: 500px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
             <span onclick="document.getElementById('uploadModal').style.display='none'"
                 style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
             <h3 style="color: var(--primary-color); margin-top: 0; margin-bottom: 20px;">Add Accomplishment</h3>
@@ -214,15 +210,14 @@
                 <div class="form-group">
                     <label style="font-weight:600;">Upload Image</label>
                     <input type="file" name="image" required class="form-control"
-                        style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                        style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd;">
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
                     <label style="font-weight:600;">Caption (Optional)</label>
                     <input type="text" name="caption" class="form-control" placeholder="Short description..."
-                        style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                        style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd;">
                 </div>
-                <button type="submit" class="btn-primary"
-                    style="width: 100%; margin-top: 25px; padding: 12px; border-radius: 8px;">Upload Photo</button>
+                style="width: 100%; margin-top: 25px; padding: 12px;">Upload Photo</button>
             </form>
         </div>
     </div>

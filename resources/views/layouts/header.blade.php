@@ -38,7 +38,7 @@
         @else
             <a href="{{ route('login') }}" style="color: var(--accent-blue);">Login</a>
             <a href="{{ route('register') }}"
-                style="border: 2px solid var(--primary-color); padding: 5px 15px; border-radius: 20px; margin-left:15px;">Register</a>
+                style="border: 2px solid var(--primary-color); padding: 5px 15px; margin-left:15px;">Register</a>
         @endauth
     </div>
     <div class="hamburger-menu">

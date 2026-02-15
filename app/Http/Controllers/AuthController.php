@@ -7,6 +7,9 @@ use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Validation\ValidationException;
+
 
 class AuthController extends Controller
 {
@@ -22,7 +25,18 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
+        $key = 'login|' . $request->username . '|' . $request->ip();
+        if (RateLimiter::tooManyAttempts($key, 3)) {
+            $seconds = RateLimiter::availableIn($key);
+            $minutes = ceil($seconds / 60);
+
+            throw ValidationException::withMessages([
+                'username' => 'Too many login attempts. Please try again in ' . $minutes . ' minutes.',
+            ]);
+        }
+
         if (Auth::attempt($credentials)) {
+            RateLimiter::clear($key);
             $request->session()->regenerate();
 
             $user = Auth::user();
@@ -42,6 +56,8 @@ class AuthController extends Controller
 
             return redirect()->intended($targetUrl);
         }
+
+        RateLimiter::hit($key, 1800); // 30 minutes lockout
 
         \Illuminate\Support\Facades\Log::info('Login Failed for username: ' . $request->username);
 

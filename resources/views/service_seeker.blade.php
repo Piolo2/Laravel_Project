@@ -29,13 +29,13 @@
                 <div class="card seeker-category-card">
                     <h3 style="margin: 0;">{{ $cat->name }}</h3>
                     <p style="margin-top: 10px; color: #666;">View Providers</p>
-                    <a href="{{ route('search', ['cat' => $cat->name]) }}"
+                    <a href="{{ route('search', ['cat' => $cat->name]) }}" aria-label="View {{ $cat->name }} category"
                         style="position:absolute; top:0; left:0; width:100%; height:100%;"></a>
                 </div>
             @endforeach
             <div class="card seeker-category-card" style="background: #f8f9fa;">
                 <h3 style="margin: 0; color: #007bff;">View All</h3>
-                <a href="{{ route('search') }}" style="position:absolute; top:0; left:0; width:100%; height:100%;"></a>
+                <a href="{{ route('search') }}" aria-label="View all categories" style="position:absolute; top:0; left:0; width:100%; height:100%;"></a>
             </div>
         </div>
     </section>

@@ -158,32 +158,32 @@
                                 <div class="row">
 
                                     <div class="col-md-6 mb-3">
-                                        <label>First Name <span class="text-danger">*</span></label>
-                                        <input type="text" name="first_name" class="form-control" required
+                                        <label for="first_name">First Name <span class="text-danger">*</span></label>
+                                        <input type="text" name="first_name" id="first_name" class="form-control" required
                                             value="{{ old('first_name', $user->profile?->full_name) }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label>Last Name <span class="text-danger">*</span></label>
-                                        <input type="text" name="last_name" class="form-control" required
+                                        <label for="last_name">Last Name <span class="text-danger">*</span></label>
+                                        <input type="text" name="last_name" id="last_name" class="form-control" required
                                             value="{{ old('last_name') }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label>Middle Name</label>
-                                        <input type="text" name="middle_name" class="form-control"
+                                        <label for="middle_name">Middle Name</label>
+                                        <input type="text" name="middle_name" id="middle_name" class="form-control"
                                             value="{{ old('middle_name') }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label>Contact No. <span class="text-danger">*</span></label>
-                                        <input type="text" name="contact_number" class="form-control" required
+                                        <label for="contact_number">Contact No. <span class="text-danger">*</span></label>
+                                        <input type="text" name="contact_number" id="contact_number" class="form-control" required
                                             value="{{ old('contact_number', $user->profile?->contact_number) }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label>Age</label>
-                                        <input type="number" name="age" class="form-control" value="{{ old('age') }}">
+                                        <label for="age">Age</label>
+                                        <input type="number" name="age" id="age" class="form-control" value="{{ old('age') }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label>Gender</label>
-                                        <select name="gender" class="form-control">
+                                        <label for="gender">Gender</label>
+                                        <select name="gender" id="gender" class="form-control">
                                             <option value="">Select gender</option>
                                             <option value="Male">Male</option>
                                             <option value="Female">Female</option>
@@ -203,8 +203,8 @@
                                 <h4 class="mb-4" style="color: #555;">Professional Information</h4>
 
                                 <div class="mb-3">
-                                    <label>No. of Years Experience</label>
-                                    <select name="years_experience" class="form-control">
+                                    <label for="years_experience">No. of Years Experience</label>
+                                    <select name="years_experience" id="years_experience" class="form-control">
                                         <option value="0">Less than 1 year</option>
                                         <option value="1">1-2 years</option>
                                         <option value="3">3-5 years</option>
@@ -213,7 +213,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label>Type of Skills <span class="text-danger">*</span></label>
+                                    <div class="mb-2">Type of Skills <span class="text-danger">*</span></div>
                                     <!-- Basic multi-select or checkboxes -->
                                     <div class="p-2 border rounded" style="max-height: 150px; overflow-y: auto;">
                                         <div class="form-check">
@@ -245,8 +245,8 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label>Type of Service</label>
-                                    <select name="service_type" class="form-control">
+                                    <label for="service_type">Type of Service</label>
+                                    <select name="service_type" id="service_type" class="form-control">
                                         <option value="Home Service">Home Service</option>
                                         <option value="Shop Based">Shop Based</option>
                                         <option value="Remote">Remote</option>
@@ -254,14 +254,14 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label>Complete Address <span class="text-danger">*</span></label>
-                                    <input type="text" name="address" class="form-control" required
+                                    <label for="address">Complete Address <span class="text-danger">*</span></label>
+                                    <input type="text" name="address" id="address" class="form-control" required
                                         value="{{ old('address', $user->profile?->address) }}">
                                 </div>
 
                                 <div class="mb-3">
-                                    <label>Civil Status</label>
-                                    <select name="civil_status" class="form-control">
+                                    <label for="civil_status">Civil Status</label>
+                                    <select name="civil_status" id="civil_status" class="form-control">
                                         <option value="Single">Single</option>
                                         <option value="Married">Married</option>
                                         <option value="Widowed">Widowed</option>
@@ -282,8 +282,8 @@
                                 <h4 class="mb-4" style="color: #555;">Verification Documents</h4>
 
                                 <div class="mb-3">
-                                    <label>Educational Attainment</label>
-                                    <select name="education_attainment" class="form-control">
+                                    <label for="education_attainment">Educational Attainment</label>
+                                    <select name="education_attainment" id="education_attainment" class="form-control">
                                         <option value="High School">High School</option>
                                         <option value="College Undergraduate">College Undergraduate</option>
                                         <option value="College Graduate">College Graduate</option>
@@ -291,8 +291,8 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label>Work Status</label>
-                                    <select name="work_status" class="form-control">
+                                    <label for="work_status">Work Status</label>
+                                    <select name="work_status" id="work_status" class="form-control">
                                         <option value="Full-Time">Full-Time</option>
                                         <option value="Part-Time">Part-Time</option>
                                         <option value="Freelance">Freelance</option>
@@ -300,7 +300,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label>Do you have any Skills Certification? (YES/NO)</label>
+                                    <label for="hasCert">Do you have any Skills Certification? (YES/NO)</label>
                                     <select id="hasCert" name="has_compliance_certificates" class="form-control"
                                         onchange="toggleCertUpload()">
                                         <option value="0">No</option>
@@ -309,16 +309,16 @@
                                 </div>
 
                                 <div class="mb-3" id="certUpload" style="display: none;">
-                                    <label>Upload proof of skills (Certificates, NC II, Training Records)</label>
-                                    <input type="file" name="compliance_certificate_file" class="form-control">
+                                    <label for="compliance_certificate_file">Upload proof of skills (Certificates, NC II, Training Records)</label>
+                                    <input type="file" name="compliance_certificate_file" id="compliance_certificate_file" class="form-control">
                                 </div>
 
                                 <hr class="my-4">
 
                                 <h5 style="color: #555;">Valid ID</h5>
                                 <div class="mb-3">
-                                    <label>Type of ID</label>
-                                    <select name="id_type" class="form-control">
+                                    <label for="id_type">Type of ID</label>
+                                    <select name="id_type" id="id_type" class="form-control">
                                         <option value="Passport">Passport</option>
                                         <option value="Driver's License">Driver's License</option>
                                         <option value="UMID">UMID</option>
@@ -329,12 +329,12 @@
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label>Upload ID (Front) <span class="text-danger">*</span></label>
-                                        <input type="file" name="id_front_file" class="form-control" required>
+                                        <label for="id_front_file">Upload ID (Front) <span class="text-danger">*</span></label>
+                                        <input type="file" name="id_front_file" id="id_front_file" class="form-control" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label>Upload ID (Back) <span class="text-danger">*</span></label>
-                                        <input type="file" name="id_back_file" class="form-control" required>
+                                        <label for="id_back_file">Upload ID (Back) <span class="text-danger">*</span></label>
+                                        <input type="file" name="id_back_file" id="id_back_file" class="form-control" required>
                                     </div>
                                 </div>
 

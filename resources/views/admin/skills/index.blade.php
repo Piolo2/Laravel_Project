@@ -14,13 +14,13 @@
                 <div class="card-body">
                     <form action="{{ route('admin.skills.store') }}" method="POST">
                         @csrf
-                        <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">SKILL NAME</label>
-                            <input type="text" name="name" class="form-control" placeholder="e.g. Plumbing, Tutor" required>
+                         <div class="mb-3">
+                            <label for="skill_name" class="form-label text-muted small fw-bold">SKILL NAME</label>
+                            <input type="text" name="name" id="skill_name" class="form-control" placeholder="e.g. Plumbing, Tutor" required>
                         </div>
                         <div class="mb-4">
-                            <label class="form-label text-muted small fw-bold">CATEGORY</label>
-                            <select name="category_id" class="form-select" required>
+                            <label for="skill_category" class="form-label text-muted small fw-bold">CATEGORY</label>
+                            <select name="category_id" id="skill_category" class="form-select" required>
                                 <option value="">Select Category</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -43,8 +43,8 @@
                     <form action="{{ route('admin.categories.store') }}" method="POST">
                         @csrf
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">CATEGORY NAME</label>
-                            <input type="text" name="name" class="form-control bg-white" placeholder="e.g. Home Services"
+                            <label for="category_name" class="form-label text-muted small fw-bold">CATEGORY NAME</label>
+                            <input type="text" name="name" id="category_name" class="form-control bg-white" placeholder="e.g. Home Services"
                                 required>
                         </div>
                         <button type="submit" class="btn btn-outline-secondary w-100">
@@ -116,14 +116,14 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         <div class="mb-3">
-                                                            <label class="form-label text-muted small fw-bold">Skill
+                                                            <label for="edit_skill_name_{{ $skill->id }}" class="form-label text-muted small fw-bold">Skill
                                                                 Name</label>
-                                                            <input type="text" name="name" class="form-control"
+                                                            <input type="text" name="name" id="edit_skill_name_{{ $skill->id }}" class="form-control"
                                                                 value="{{ $skill->name }}" required>
                                                         </div>
                                                         <div class="mb-3">
-                                                            <label class="form-label text-muted small fw-bold">Category</label>
-                                                            <select name="category_id" class="form-select" required>
+                                                            <label for="edit_skill_category_{{ $skill->id }}" class="form-label text-muted small fw-bold">Category</label>
+                                                            <select name="category_id" id="edit_skill_category_{{ $skill->id }}" class="form-select" required>
                                                                 @foreach($categories as $category)
                                                                     <option value="{{ $category->id }}" {{ $skill->category_id == $category->id ? 'selected' : '' }}>
                                                                         {{ $category->name }}

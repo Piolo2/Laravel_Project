@@ -27,7 +27,7 @@
             @if (count($active_requests) > 0)
                 <div class="requests-grid">
                     @foreach ($active_requests as $req)
-                        <div class="request-card-minimal accepted" id="request-{{ $req->id }}">
+                        <div class="request-card-minimal accepted" id="active-request-{{ $req->id }}">
                             <div class="header">
                                 <h5 class="title">Service with {{ $req->provider_name }}</h5>
                                 <span class="badge-minimal accepted">Accepted</span>
@@ -76,7 +76,7 @@
             @if (count($pending_requests) > 0)
                 <div class="requests-grid">
                     @foreach ($pending_requests as $req)
-                        <div class="request-card-minimal pending" id="request-{{ $req->id }}">
+                        <div class="request-card-minimal pending" id="pending-request-{{ $req->id }}">
                             <div class="header">
                                 <h5 class="title">Service with {{ $req->provider_name }}</h5>
                                 <span class="badge-minimal pending">Waiting for response</span>
@@ -168,20 +168,21 @@
                 <input type="hidden" name="service_request_id" id="review_request_id">
 
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom: 5px;">Rating:</label>
-                    <div class="rating-stars" style="font-size: 24px; color: #ffc107; cursor: pointer;">
-                        <i class="far fa-star star" data-value="1" onclick="setRating(1)"></i>
-                        <i class="far fa-star star" data-value="2" onclick="setRating(2)"></i>
-                        <i class="far fa-star star" data-value="3" onclick="setRating(3)"></i>
-                        <i class="far fa-star star" data-value="4" onclick="setRating(4)"></i>
-                        <i class="far fa-star star" data-value="5" onclick="setRating(5)"></i>
+                    <label for="ratingInput" style="display:block; margin-bottom: 5px;">Rating:</label>
+                    <div class="rating-stars" style="display: flex; gap: 5px;">
+                        @for($i=1; $i<=5; $i++)
+                            <button type="button" class="star-btn" data-value="{{ $i }}" onclick="setRating({{ $i }})"
+                                style="background: none; border: none; font-size: 24px; color: #ffc107; cursor: pointer; padding: 0;">
+                                <i class="far fa-star star-icon"></i>
+                            </button>
+                        @endfor
                     </div>
                     <input type="hidden" name="rating" id="ratingInput" required>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <label>Comment (Optional):</label>
-                    <textarea name="comment" class="form-control" rows="3"
+                    <label for="comment">Comment (Optional):</label>
+                    <textarea name="comment" id="comment" class="form-control" rows="3"
                         style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
                 </div>
 
@@ -268,15 +269,18 @@
             function setRating(value) {
                 currentRating = value;
                 document.getElementById('ratingInput').value = value;
-                const stars = document.querySelectorAll('.rating-stars .star');
-                stars.forEach(star => {
-                    const starVal = parseInt(star.getAttribute('data-value'));
-                    if (starVal <= value) {
-                        star.classList.remove('far');
-                        star.classList.add('fas');
+                const starBtns = document.querySelectorAll('.star-btn');
+                
+                starBtns.forEach(btn => {
+                    const btnVal = parseInt(btn.getAttribute('data-value'));
+                    const icon = btn.querySelector('.star-icon');
+                    
+                    if (btnVal <= value) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
                     } else {
-                        star.classList.remove('fas');
-                        star.classList.add('far');
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
                     }
                 });
             }

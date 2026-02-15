@@ -28,7 +28,7 @@
                     <input type="file" class="form-control" id="image" name="image" accept="image/*">
                     @if($announcement->image_path)
                         <div class="mt-2">
-                            <img src="{{ asset($announcement->image_path) }}" alt="Current Image"
+                            <img src="{{ asset($announcement->image_path) }}" alt="Current Announcement"
                                 style="height: 100px; border-radius: 5px;">
                             <p class="text-muted small">Current Image</p>
                         </div>

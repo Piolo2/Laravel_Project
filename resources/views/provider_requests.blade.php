@@ -20,7 +20,7 @@
             @if (count($pending_requests) > 0)
                 <div style="margin-top: 15px;">
                     @foreach ($pending_requests as $req)
-                        <div class="request-card pending" id="request-{{ $req->id }}">
+                        <div class="request-card pending" id="pending-request-{{ $req->id }}">
                             <div class="request-header">
                                 <h4 class="request-title">Request from {{ $req->seeker_name }}</h4>
                                 <span class="badge badge-pending">Action Required</span>
@@ -73,7 +73,7 @@
             @if (count($ongoing_requests) > 0)
                 <div style="margin-top: 15px;">
                     @foreach ($ongoing_requests as $req)
-                        <div class="request-card accepted" id="request-{{ $req->id }}">
+                        <div class="request-card accepted" id="accepted-request-{{ $req->id }}">
                             <div class="request-header">
                                 <h4 class="request-title">Ongoing Service for {{ $req->seeker_name }}</h4>
                                 <span class="badge badge-accepted">Accepted</span>

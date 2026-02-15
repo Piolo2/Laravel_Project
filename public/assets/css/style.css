@@ -89,10 +89,12 @@ body {
         flex-direction: column;
         align-items: center;
         padding: 0;
+        padding: 0;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
+        z-index: 2000;
         border-top: 1px solid #eee;
-        animation: slideDown 0.3s ease forwards;
+        /* animation: slideDown 0.3s ease forwards; Removed to fix visibility */
+        transition: all 0.3s ease;
     }
 
     @keyframes slideDown {
@@ -108,7 +110,10 @@ body {
     }
 
     .nav-links.active {
-        display: flex;
+        display: flex !important;
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        background-color: var(--white);
     }
 
     .nav-links a {
@@ -1522,5 +1527,7 @@ button.btn-primary {
     background-color: #e2e3e5;
     color: #383d41;
 }
-* { border-radius: 0 !important; }
 
+* {
+    border-radius: 0 !important;
+}

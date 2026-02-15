@@ -46,7 +46,7 @@
                 <div class="profile-sidebar">
                     <div class="profile-img-container">
                         @if (!empty($profile->profile_picture))
-                            <img src="{{ asset($profile->profile_picture) }}" alt="Profile Picture" class="profile-img-main">
+                            <img src="{{ asset($profile->profile_picture) }}" alt="Profile" class="profile-img-main">
                         @else
                             <div class="profile-img-placeholder">
                                 <span class="profile-icon"><i class="fas fa-user"></i></span>
@@ -97,28 +97,28 @@
                     <h3 class="form-section-title">Personal Information</h3>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>Full Name</label>
-                            <input type="text" name="full_name" value="{{ old('full_name', $profile->full_name ?? '') }}"
-                                required>
+                            <label for="full_name">Full Name</label>
+                            <input type="text" name="full_name" id="full_name"
+                                value="{{ old('full_name', $profile->full_name ?? '') }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Contact Number
+                            <label for="contact_number">Contact Number
                                 {!! (Auth::user()->role === 'resident') ? '<small class="text-muted">(Public)</small>' : '' !!}</label>
-                            <input type="text" name="contact_number"
+                            <input type="text" name="contact_number" id="contact_number"
                                 value="{{ old('contact_number', $profile->contact_number ?? '') }}">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Bio</label>
-                        <textarea name="bio" rows="4"
+                        <label for="bio">Bio</label>
+                        <textarea name="bio" id="bio" rows="4"
                             style="resize: vertical;">{{ old('bio', $profile->bio ?? '') }}</textarea>
                     </div>
 
                     <h3 class="form-section-title">Location Details</h3>
                     <div class="form-group">
-                        <label>Barangay (Unisan, Quezon) <span style="color:red;">*</span></label>
+                        <label for="barangaySelect">Barangay (Unisan, Quezon) <span style="color:red;">*</span></label>
                         <select name="address" id="barangaySelect" required
                             style="width: 100%; padding: 10px; border: 1px solid #ccc;">
                             <option value="">-- Select Barangay --</option>
@@ -143,7 +143,7 @@
 
                     @if (Auth::user()->role !== 'seeker')
                         <div style="margin-top: 25px;">
-                            <label style="margin-bottom: 10px; display: block;">Pin Location on Map</label>
+                            <span style="font-weight: bold; margin-bottom: 10px; display: block;">Pin Location on Map</span>
                             <div id="map" class="map-container"></div>
                             <p class="map-info">
                                 <i class="fas fa-info-circle"></i> Click on the map to set your exact location for service
@@ -202,22 +202,24 @@
         style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5);">
         <div class="modal-content"
             style="background-color: #fefefe; margin: 15% auto; padding: 25px; border: 1px solid #888; width: 90%; max-width: 500px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
-            <span onclick="document.getElementById('uploadModal').style.display='none'"
-                style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+            <button type="button" onclick="document.getElementById('uploadModal').style.display='none'"
+                style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; border: none; background: none; padding: 0; line-height: 1;">&times;</button>
             <h3 style="color: var(--primary-color); margin-top: 0; margin-bottom: 20px;">Add Accomplishment</h3>
             <form action="{{ route('accomplishments.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
-                    <label style="font-weight:600;">Upload Image</label>
-                    <input type="file" name="image" required class="form-control"
+                    <label for="image_upload" style="font-weight:600;">Upload Image</label>
+                    <input type="file" name="image" id="image_upload" required class="form-control"
                         style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd;">
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
-                    <label style="font-weight:600;">Caption (Optional)</label>
-                    <input type="text" name="caption" class="form-control" placeholder="Short description..."
+                    <label for="image_caption" style="font-weight:600;">Caption (Optional)</label>
+                    <input type="text" name="caption" id="image_caption" class="form-control"
+                        placeholder="Short description..."
                         style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd;">
                 </div>
-                style="width: 100%; margin-top: 25px; padding: 12px;">Upload Photo</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 25px; padding: 12px;">Upload
+                    Photo</button>
             </form>
         </div>
     </div>
@@ -248,3 +250,5 @@
         <script src="{{ asset('assets/js/profile-map.js') }}"></script>
     @endif
 @endpush
+
+

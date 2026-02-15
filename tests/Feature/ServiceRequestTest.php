@@ -7,6 +7,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
+const UPDATE_REQUEST_ENDPOINT = '/requests/update';
+
 beforeEach(function () {
     // Seed roles
     Role::forceCreate(['id' => 1, 'name' => 'Admin', 'slug' => 'admin']);
@@ -57,7 +59,7 @@ test('provider can accept a pending request', function () {
         'notes' => 'Fix leak',
     ]);
 
-    $response = $this->actingAs($provider)->post('/requests/update', [
+    $response = $this->actingAs($provider)->post(UPDATE_REQUEST_ENDPOINT, [
         'request_id' => $request->id,
         'status' => 'Accepted',
     ]);
@@ -81,7 +83,7 @@ test('provider can decline a pending request', function () {
         'notes' => 'Too busy',
     ]);
 
-    $response = $this->actingAs($provider)->post('/requests/update', [
+    $this->actingAs($provider)->post(UPDATE_REQUEST_ENDPOINT, [
         'request_id' => $request->id,
         'status' => 'Declined',
     ]);
@@ -104,7 +106,7 @@ test('seeker can cancel a pending request', function () {
         'notes' => 'Changed mind',
     ]);
 
-    $response = $this->actingAs($seeker)->post('/requests/update', [
+    $this->actingAs($seeker)->post(UPDATE_REQUEST_ENDPOINT, [
         'request_id' => $request->id,
         'status' => 'Cancelled',
     ]);
@@ -128,7 +130,7 @@ test('unauthorized user cannot update request', function () {
         'notes' => 'Secret',
     ]);
 
-    $response = $this->actingAs($otherUser)->post('/requests/update', [
+    $response = $this->actingAs($otherUser)->post(UPDATE_REQUEST_ENDPOINT, [
         'request_id' => $request->id,
         'status' => 'Cancelled',
     ]);

@@ -6,21 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loader = document.getElementById('loader-wrapper');
 
-    // Hamburger Menu Logic
-    const hamburger = document.querySelector('.hamburger-menu');
-    const navLinks = document.querySelector('.nav-links');
-
-    if (hamburger && navLinks) {
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-    }
+    // Hamburger Menu Logic - MOVED TO INLINE SCRIPT IN HEADER.BLADE.PHP TO ENSURE RELIABILITY
+    // The previous logic here was creating potential conflicts or failing to load.
 
     const showLoader = () => {
         if (loader) {
             loader.style.display = 'flex';
             // Force reflow to ensure transition plays
-            loader.offsetHeight;
+            loader.getBoundingClientRect();
             loader.classList.remove('loaded');
         }
     };

@@ -19,11 +19,7 @@
                 <h3>Login</h3>
                 <p>Please enter your credentials to access your account.</p>
 
-                @if (session('error'))
-                    <div class="alert alert-danger">
-                        {{ session('error') }}
-                    </div>
-                @endif
+
 
                 <form method="POST" action="{{ route('login') }}">
                     @csrf

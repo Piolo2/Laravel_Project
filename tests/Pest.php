@@ -12,7 +12,7 @@
 */
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -43,5 +43,5 @@ expect()->extend('toBeOne', function () {
 
 function something()
 {
-    // ..
+    // This function is a placeholder for future helper functions.
 }

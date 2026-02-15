@@ -11,6 +11,11 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\VerificationController;
 
 
+
+if (!defined('ID_PARAM')) {
+    define('ID_PARAM', '/{id}');
+}
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/announcement/{id}', [HomeController::class, 'showAnnouncement'])->name('announcement.show');
 Route::get('/api/markers', [SearchController::class, 'getMarkers'])->name('api.markers');
@@ -49,7 +54,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [SkillController::class, 'index'])->name('index'); // services
         Route::post('/add', [SkillController::class, 'store'])->name('add');
         Route::post('/toggle/{id}/{status}', [SkillController::class, 'toggle'])->name('toggle');
-        Route::delete('/{id}', [SkillController::class, 'destroy'])->name('delete');
+        Route::delete(ID_PARAM, [SkillController::class, 'destroy'])->name('delete');
     });
 
     // Requests
@@ -85,11 +90,11 @@ Route::middleware(['auth'])->group(function () {
         // User Management
         Route::prefix('users')->name('users.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\AdminUserController::class, 'index'])->name('index');
-            Route::get('/{id}', [\App\Http\Controllers\Admin\AdminUserController::class, 'show'])->name('show');
-            Route::put('/{id}', [\App\Http\Controllers\Admin\AdminUserController::class, 'update'])->name('update');
-            Route::delete('/{id}', [\App\Http\Controllers\Admin\AdminUserController::class, 'destroy'])->name('destroy');
-            Route::post('/{id}/verify', [\App\Http\Controllers\Admin\AdminUserController::class, 'approveVerification'])->name('verify');
-            Route::post('/{id}/reject', [\App\Http\Controllers\Admin\AdminUserController::class, 'rejectVerification'])->name('reject');
+            Route::get(ID_PARAM, [\App\Http\Controllers\Admin\AdminUserController::class, 'show'])->name('show');
+            Route::put(ID_PARAM, [\App\Http\Controllers\Admin\AdminUserController::class, 'update'])->name('update');
+            Route::delete(ID_PARAM, [\App\Http\Controllers\Admin\AdminUserController::class, 'destroy'])->name('destroy');
+            Route::post(ID_PARAM . '/verify', [\App\Http\Controllers\Admin\AdminUserController::class, 'approveVerification'])->name('verify');
+            Route::post(ID_PARAM . '/reject', [\App\Http\Controllers\Admin\AdminUserController::class, 'rejectVerification'])->name('reject');
         });
 
         // Reports
@@ -112,5 +117,8 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('announcements', \App\Http\Controllers\Admin\AdminAnnouncementController::class);
     });
 });
+
+
+
 
 

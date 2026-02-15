@@ -14,12 +14,12 @@
             style="margin-bottom: 30px; padding: 20px; border: 1px solid #e0e0e0; background: #fff; border-radius: 8px;">
             <div class="search-filters">
                 <div class="filter-group-keyword">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Keyword</label>
+                    <label for="keyword" style="display: block; margin-bottom: 5px; font-weight: 600;">Keyword</label>
                     <input type="text" id="keyword" placeholder="Search service or name..."
                         style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
                 </div>
                 <div class="filter-group-category">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Category</label>
+                    <label for="category" style="display: block; margin-bottom: 5px; font-weight: 600;">Category</label>
                     <select id="category" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
                         <option value="">All Categories</option>
                         @foreach ($categories as $cat)
@@ -28,7 +28,7 @@
                     </select>
                 </div>
                 <div class="filter-group-distance">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Max Dist (km)</label>
+                    <label for="distance" style="display: block; margin-bottom: 5px; font-weight: 600;">Max Dist (km)</label>
                     <input type="number" id="distance" value="10"
                         style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
                 </div>
@@ -68,3 +68,4 @@
 @push('scripts')
     <script src="{{ asset('assets/js/search-map.js') }}"></script>
 @endpush
+

@@ -5,8 +5,9 @@ use App\Models\User;
 
 Route::get('/debug-skills/{id}', function ($id) {
     $user = User::with('skills')->find($id);
-    if (!$user)
+    if (!$user) {
         return 'User not found';
+    }
 
     return $user->skills->map(function ($skill) {
         return [

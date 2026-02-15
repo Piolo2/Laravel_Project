@@ -28,19 +28,19 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="row mb-3">
-                            <label class="col-sm-3 fw-bold">Full Name</label>
+                            <div class="col-sm-3 fw-bold">Full Name</div>
                             <div class="col-sm-9">{{ $user->profile->full_name ?? 'N/A' }}</div>
                         </div>
                         <div class="row mb-3">
-                            <label class="col-sm-3 fw-bold">Contact Number</label>
+                            <div class="col-sm-3 fw-bold">Contact Number</div>
                             <div class="col-sm-9">{{ $user->profile->contact_number ?? 'N/A' }}</div>
                         </div>
                         <div class="row mb-3">
-                            <label class="col-sm-3 fw-bold">Address</label>
+                            <div class="col-sm-3 fw-bold">Address</div>
                             <div class="col-sm-9">{{ $user->profile->address ?? 'N/A' }}</div>
                         </div>
                         <div class="row mb-3">
-                            <label class="col-sm-3 fw-bold">Joined</label>
+                            <div class="col-sm-3 fw-bold">Joined</div>
                             <div class="col-sm-9">{{ $user->created_at->format('F d, Y') }}</div>
                         </div>
                     </div>
@@ -147,8 +147,9 @@
                                     <form action="{{ route('admin.users.reject', $user->id) }}" method="POST">
                                         @csrf
                                         <div class="mb-2">
-                                            <label>Rejection Reason</label>
-                                            <textarea name="rejection_reason" class="form-control" rows="2" required></textarea>
+                                            <label for="rejection_reason">Rejection Reason</label>
+                                            <textarea name="rejection_reason" id="rejection_reason" class="form-control" rows="2"
+                                                required></textarea>
                                         </div>
                                         <button type="submit" class="btn btn-sm btn-danger">Confirm Rejection</button>
                                         <button type="button" class="btn btn-sm btn-secondary"
@@ -166,3 +167,4 @@
             </div>
         </div>
 @endsection
+

@@ -9,7 +9,7 @@
         <div class="card" style="max-width: 800px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 30px;">
                 @if (!empty($profile->profile_picture))
-                    <img src="{{ asset($profile->profile_picture) }}" alt="Profile Picture"
+                    <img src="{{ asset($profile->profile_picture) }}" alt="Profile"
                         style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-color);">
                 @else
                     <div
@@ -84,11 +84,11 @@
                 @if($accomplishments->count() > 0)
                     <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 25px;">
                         @foreach($accomplishments as $item)
-                            <div style="flex: 0 0 auto; width: 150px; cursor: pointer;"
+                            <button type="button" style="flex: 0 0 auto; width: 150px; cursor: pointer; border: none; background: none; padding: 0;"
                                 onclick="openLightbox('{{ asset($item->image_path) }}', '{{ $item->caption }}')">
                                 <img src="{{ asset($item->image_path) }}" alt="Accomplishment"
                                     style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.2s;">
-                            </div>
+                            </button>
                         @endforeach
                     </div>
                 @else
@@ -99,10 +99,10 @@
             <!-- Lightbox Modal -->
             <div id="lightboxModal"
                 style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center;">
-                <span onclick="document.getElementById('lightboxModal').style.display='none'"
-                    style="position: absolute; top: 20px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer;">&times;</span>
+                <button type="button" onclick="document.getElementById('lightboxModal').style.display='none'"
+                    style="position: absolute; top: 20px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; background: none; border: none; padding: 0; line-height: 1;">&times;</button>
                 <div style="text-align: center; max-width: 90%; max-height: 90%;">
-                    <img id="lightboxImg"
+                    <img id="lightboxImg" alt="Enlarged view"
                         style="max-width: 100%; max-height: 80vh; border-radius: 4px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
                     <div id="lightboxCaption" style="color: #ccc; margin-top: 15px; font-size: 1.2rem;"></div>
                 </div>
@@ -177,14 +177,14 @@
                 <input type="hidden" name="provider_id" value="{{ $provider_id }}">
 
                 <div class="form-group">
-                    <label>Proposed Date & Time</label>
-                    <input type="datetime-local" name="service_date" required
+                    <label for="service_date">Proposed Date & Time</label>
+                    <input type="datetime-local" name="service_date" id="service_date" required
                         style="width: 100%; padding: 8px; margin-top: 5px;">
                 </div>
 
                 <div class="form-group" style="margin-top: 15px;">
-                    <label>Notes / Description of Issue</label>
-                    <textarea name="notes" rows="4" placeholder="Describe what you need help with..."
+                    <label for="notes">Notes / Description of Issue</label>
+                    <textarea name="notes" id="notes" rows="4" placeholder="Describe what you need help with..."
                         style="width: 100%; padding: 8px; margin-top: 5px;"></textarea>
                 </div>
 

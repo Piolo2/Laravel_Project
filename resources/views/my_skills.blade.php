@@ -33,11 +33,12 @@
                         <form method="POST" action="{{ route('services.add') }}">
                             @csrf
                             <div class="form-group mb-3">
-                                <label class="font-weight-bold text-muted small text-uppercase">Select Skill</label>
+                                <label for="skill_id" class="font-weight-bold text-muted small text-uppercase">Select
+                                    Skill</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-0"><i
                                             class="fas fa-tools text-muted"></i></span>
-                                    <select name="skill_id" class="form-control bg-light border-0" required>
+                                    <select name="skill_id" id="skill_id" class="form-control bg-light border-0" required>
                                         <option value="">-- Choose Skill --</option>
                                         @foreach($skills_by_category as $cat => $skills)
                                             <optgroup label="{{ $cat }}">
@@ -51,10 +52,11 @@
                             </div>
 
                             <div class="form-group mb-3">
-                                <label class="font-weight-bold text-muted small text-uppercase">Description / Rates / Notes
+                                <label for="description"
+                                    class="font-weight-bold text-muted small text-uppercase">Description / Rates / Notes
                                     (Optional)</label>
-                                <textarea name="description" class="form-control bg-light border-0" rows="3"
-                                    placeholder="e.g. 500 per visit, available weekends only"></textarea>
+                                <textarea name="description" id="description" class="form-control bg-light border-0"
+                                    rows="3" placeholder="e.g. 500 per visit, available weekends only"></textarea>
                             </div>
 
                             <button type="submit" class="btn btn-primary w-100 shadow-sm">
@@ -130,15 +132,15 @@
                                             <td class="text-end pr-4 align-middle">
                                                 <div class="actions" id="actions-{{ $item->pivot_id }}">
                                                     @if($item->availability_status == 'Available')
-                                                        <a href="javascript:void(0)"
+                                                        <button type="button"
                                                             onclick="toggleStatus({{ $item->pivot_id }}, 'Unavailable')"
-                                                            class="btn btn-sm btn-outline-warning border-0 font-weight-bold">Mark
-                                                            Unavailable</a>
+                                                            class="btn btn-sm btn-outline-warning border-0 font-weight-bold toggle-status-btn">Mark
+                                                            Unavailable</button>
                                                     @else
-                                                        <a href="javascript:void(0)"
+                                                        <button type="button"
                                                             onclick="toggleStatus({{ $item->pivot_id }}, 'Available')"
-                                                            class="btn btn-sm btn-outline-success border-0 font-weight-bold">Mark
-                                                            Available</a>
+                                                            class="btn btn-sm btn-outline-success border-0 font-weight-bold toggle-status-btn">Mark
+                                                            Available</button>
                                                     @endif
 
                                                     <button type="button" onclick="deleteService({{ $item->pivot_id }})"
@@ -181,69 +183,69 @@
                         'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Response:', data);
-                    if (data.success) {
-                        // Update Badge
-                        if (badge) {
-                            badge.textContent = newStatus;
-                            badge.classList.remove('bg-success', 'bg-danger');
-                            badge.classList.add(newStatus === 'Available' ? 'bg-success' : 'bg-danger');
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
                         }
-
-                        // Update Action Button
-                        if (actionContainer) {
-                            // Clear existing buttons (except delete, maybe? The original code had them together)
-                            // We need to preserve the delete button. 
-                            // Easier to just find the toggle button specifically if we put a class on it, 
-                            // OR just replace the specific toggle button HTML.
-                            
-                            // Let's reconstruct the toggle button HTML based on the new status
-                            let toggleBtnHtml = '';
-                            if (newStatus === 'Available') {
-                                // Now is available, show "Mark Unavailable"
-                                toggleBtnHtml = `<a href="javascript:void(0)" 
-                                    onclick="toggleStatus(${id}, 'Unavailable')" 
-                                    class="btn btn-sm btn-outline-warning border-0 font-weight-bold">Mark Unavailable</a>`;
-                            } else {
-                                // Now is unavailable, show "Mark Available"
-                                toggleBtnHtml = `<a href="javascript:void(0)" 
-                                    onclick="toggleStatus(${id}, 'Available')" 
-                                    class="btn btn-sm btn-outline-success border-0 font-weight-bold">Mark Available</a>`;
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Response:', data);
+                        if (data.success) {
+                            // Update Badge
+                            if (badge) {
+                                badge.textContent = newStatus;
+                                badge.classList.remove('bg-success', 'bg-danger');
+                                badge.classList.add(newStatus === 'Available' ? 'bg-success' : 'bg-danger');
                             }
 
-                            // We need to keep the delete button. The original structure was:
-                            // <div id="actions-...">
-                            //    <a>Toggle</a>
-                            //    <button>Delete</button>
-                            // </div>
-                            
-                            // Let's find the existing toggle button (anchor tag) and replace it.
-                            const existingToggle = actionContainer.querySelector('a');
-                            if (existingToggle) {
-                                existingToggle.outerHTML = toggleBtnHtml;
-                            } else {
-                                // Fallback if somehow missing, prepend.
-                                actionContainer.insertAdjacentHTML('afterbegin', toggleBtnHtml);
+                            // Update Action Button
+                            if (actionContainer) {
+                                // Clear existing buttons (except delete, maybe? The original code had them together)
+                                // We need to preserve the delete button.
+                                // Easier to just find the toggle button specifically if we put a class on it,
+                                // OR just replace the specific toggle button HTML.
+
+                                // Let's reconstruct the toggle button HTML based on the new status
+                                let toggleBtnHtml = '';
+                                if (newStatus === 'Available') {
+                                    // Now is available, show "Mark Unavailable"
+                                    toggleBtnHtml = `<button type="button"
+                                                                    onclick="toggleStatus(${id}, 'Unavailable')"
+                                                                    class="btn btn-sm btn-outline-warning border-0 font-weight-bold toggle-status-btn">Mark Unavailable</button>`;
+                                } else {
+                                    // Now is unavailable, show "Mark Available"
+                                    toggleBtnHtml = `<button type="button"
+                                                                    onclick="toggleStatus(${id}, 'Available')"
+                                                                    class="btn btn-sm btn-outline-success border-0 font-weight-bold toggle-status-btn">Mark Available</button>`;
+                                }
+
+                                // We need to keep the delete button. The original structure was:
+                                // <div id="actions-...">
+                                //    <button class="toggle-status-btn">Toggle</button>
+                                //    <button>Delete</button>
+                                // </div>
+
+                                // Let's find the existing toggle button and replace it.
+                                const existingToggle = actionContainer.querySelector('.toggle-status-btn');
+                                if (existingToggle) {
+                                    existingToggle.outerHTML = toggleBtnHtml;
+                                } else {
+                                    // Fallback if somehow missing, prepend.
+                                    actionContainer.insertAdjacentHTML('afterbegin', toggleBtnHtml);
+                                }
                             }
+
+                            // Optional: Show a toast? The original had an alert-container, but we are preventing reload.
+                            // We could inject a success alert at the top if we wanted.
+                        } else {
+                            alert('Error updating status: ' + (data.message || 'Unknown error'));
                         }
-                        
-                        // Optional: Show a toast? The original had an alert-container, but we are preventing reload.
-                        // We could inject a success alert at the top if we wanted.
-                    } else {
-                        alert('Error updating status: ' + (data.message || 'Unknown error'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while updating status. Please check console for details.');
-                });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while updating status. Please check console for details.');
+                    });
             }
 
             function deleteService(id) {
@@ -268,3 +270,4 @@
         </script>
     @endpush
 @endsection
+

@@ -14,8 +14,10 @@ beforeEach(function () {
     Role::forceCreate(['id' => 3, 'name' => 'Service Seeker', 'slug' => 'seeker']);
 });
 
+const LOGIN_ROUTE = '/login';
+
 test('login screen can be rendered', function () {
-    $response = $this->get('/login');
+    $response = $this->get(LOGIN_ROUTE);
 
     $response->assertStatus(200);
 });
@@ -27,7 +29,7 @@ test('users can authenticate using the login screen', function () {
         'role_id' => 3,
     ]);
 
-    $response = $this->post('/login', [
+    $response = $this->post(LOGIN_ROUTE, [
         'username' => $user->username,
         'password' => $password,
     ]);
@@ -43,7 +45,7 @@ test('admins are redirected to admin dashboard', function () {
         'role_id' => 1,
     ]);
 
-    $response = $this->post('/login', [
+    $response = $this->post(LOGIN_ROUTE, [
         'username' => $user->username,
         'password' => $password,
     ]);
@@ -59,7 +61,7 @@ test('providers are redirected to provider dashboard', function () {
         'role_id' => 2,
     ]);
 
-    $response = $this->post('/login', [
+    $response = $this->post(LOGIN_ROUTE, [
         'username' => $user->username,
         'password' => $password,
     ]);
@@ -71,7 +73,7 @@ test('providers are redirected to provider dashboard', function () {
 test('users can not authenticate with invalid password', function () {
     $user = User::factory()->create();
 
-    $this->post('/login', [
+    $this->post(LOGIN_ROUTE, [
         'username' => $user->username,
         'password' => 'wrong-password',
     ]);

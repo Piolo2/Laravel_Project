@@ -17,7 +17,8 @@
                     <select name="role" class="form-select">
                         <option value="">All Roles</option>
                         <option value="seeker" {{ request('role') == 'seeker' ? 'selected' : '' }}>Service Seeker</option>
-                        <option value="resident" {{ request('role') == 'resident' ? 'selected' : '' }}>Service Provider</option>
+                        <option value="resident" {{ request('role') == 'resident' ? 'selected' : '' }}>Service Provider
+                        </option>
                         <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                     </select>
                 </div>
@@ -142,9 +143,11 @@
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label text-muted small text-uppercase fw-bold">Assign
+                                                <label for="role-{{ $user->id }}"
+                                                    class="form-label text-muted small text-uppercase fw-bold">Assign
                                                     Role</label>
-                                                <select name="role" class="form-select form-select-lg">
+                                                <select name="role" id="role-{{ $user->id }}"
+                                                    class="form-select form-select-lg">
                                                     <option value="seeker" {{ $user->role == 'seeker' ? 'selected' : '' }}>Service
                                                         Seeker
                                                     </option>
@@ -175,3 +178,4 @@
         @endif
     </div>
 @endsection
+

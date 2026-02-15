@@ -46,10 +46,12 @@ test('seeker dashboard is accessible by seeker', function () {
     $response->assertStatus(200);
 });
 
+const LOGIN_URL = '/login';
+
 test('guests are redirected to login when accessing dashboards', function () {
-    $this->get('/admin/dashboard')->assertRedirect('/login');
-    $this->get('/service-provider')->assertRedirect('/login');
-    $this->get('/service-seeker')->assertRedirect('/login');
+    $this->get('/admin/dashboard')->assertRedirect(LOGIN_URL);
+    $this->get('/service-provider')->assertRedirect(LOGIN_URL);
+    $this->get('/service-seeker')->assertRedirect(LOGIN_URL);
 });
 
 // Assuming there is some middleware to protect specific dashboards from other roles.

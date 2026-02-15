@@ -35,7 +35,7 @@ class SkillController extends Controller
         }
 
         // fetch all skills for dropdown
-        $all_skills = \App\Models\Skill::with('category')->get();
+        $all_skills = Skill::with('category')->get();
 
         // group by category manually
         $skills_by_category = [];
@@ -51,7 +51,8 @@ class SkillController extends Controller
             $skills_by_category[$catName][] = $skill;
         }
 
-        return view('my_skills', compact('my_skills', 'skills_by_category'));
+        $profile = $user->profile;
+        return view('my_skills', compact('my_skills', 'skills_by_category', 'profile'));
     }
 
     public function store(Request $request)
@@ -94,22 +95,23 @@ class SkillController extends Controller
 
         if (!$exists) {
             \Illuminate\Support\Facades\Log::warning("Toggle Failed: Record not found or access denied", ['id' => $id, 'user_id' => $userId]);
-            if (request()->ajax()) {
-                return response()->json(['success' => false, 'message' => 'Service not found or access denied.']);
-            }
-            return back()->with('error', 'Service not found or access denied.');
-        }
+            $success = false;
+            $message = 'Service not found or access denied.';
+        } else {
+            // 2. update now
+            \Illuminate\Support\Facades\DB::table('user_skills')
+                ->where('id', $id)
+                ->where('user_id', $userId)
+                ->update(['availability_status' => $status]);
 
-        // 2. update now
-        \Illuminate\Support\Facades\DB::table('user_skills')
-            ->where('id', $id)
-            ->where('user_id', $userId)
-            ->update(['availability_status' => $status]);
+            $success = true;
+            $message = "Status updated to $status!";
+        }
 
         if (request()->ajax()) {
-            return response()->json(['success' => true, 'message' => "Status updated to $status!"]);
+            return response()->json(['success' => $success, 'message' => $message]);
         }
-        return back()->with('msg', "Status updated to $status!");
+        return back()->with($success ? 'msg' : 'error', $message);
     }
 
     public function destroy($id)
@@ -124,3 +126,4 @@ class SkillController extends Controller
         return back()->with('msg', 'Skill removed from your profile.');
     }
 }
+

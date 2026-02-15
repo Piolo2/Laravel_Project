@@ -52,23 +52,12 @@
         const navLinks = document.querySelector('.nav-links');
 
         if (hamburger && navLinks) {
+
             hamburger.addEventListener('click', function (e) {
                 e.preventDefault(); // Prevent default link behavior if any
                 navLinks.classList.toggle('active');
 
-                // Icon Toggle Logic
-                const icon = hamburger.querySelector('i');
-                if (icon) {
-                    if (navLinks.classList.contains('active')) {
-                        icon.classList.remove('fa-bars');
-                        icon.classList.add('fa-times');
-                        navLinks.style.display = 'flex'; // Force display
-                    } else {
-                        icon.classList.remove('fa-times');
-                        icon.classList.add('fa-bars');
-                        navLinks.style.display = ''; // Reset display
-                    }
-                }
+
             });
         }
     });

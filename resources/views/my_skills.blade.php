@@ -9,13 +9,13 @@
             <div class="col-12 mb-3">
                 <div id="alert-container">
                     @if (session('msg'))
-                        <div class="alert alert-success shadow-sm border-0">{{ session('msg') }}</div>
+                        <div class="alert alert-success border-0">{{ session('msg') }}</div>
                     @endif
                     @if (session('success'))
-                        <div class="alert alert-success shadow-sm border-0">{{ session('success') }}</div>
+                        <div class="alert alert-success border-0">{{ session('success') }}</div>
                     @endif
                     @if (session('error'))
-                        <div class="alert alert-danger shadow-sm border-0">{{ session('error') }}</div>
+                        <div class="alert alert-danger border-0">{{ session('error') }}</div>
                     @endif
                 </div>
             </div>
@@ -25,7 +25,7 @@
         <div class="row mb-4">
             <!-- Left Column: Add Service Form -->
             <div class="col-md-7 mb-4 mb-md-0">
-                <div class="card shadow-sm border-0 h-100">
+                <div class="card border-0 h-100">
                     <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
                         <h5 class="mb-0">Add New Service</h5>
                     </div>
@@ -59,7 +59,7 @@
                                     rows="3" placeholder="e.g. 500 per visit, available weekends only"></textarea>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 shadow-sm">
+                            <button type="submit" class="btn btn-primary w-100">
                                 <i class="fas fa-plus-circle mr-2"></i> Add Service
                             </button>
                         </form>
@@ -69,7 +69,7 @@
 
             <!-- Right Column: Instructions -->
             <div class="col-md-5">
-                <div class="card shadow-sm border-0 h-100 bg-white">
+                <div class="card border-0 h-100 bg-white">
                     <div class="card-body p-4">
                         <h4 class="card-title text-primary mb-3">Manage Offerings</h4>
                         <p class="text-muted">List the services you want to be discovered for. This helps clients find the
@@ -83,7 +83,7 @@
                         </div>
 
                         @if(empty($profile->latitude))
-                            <div class="alert alert-danger shadow-sm border-0 mt-3">
+                            <div class="alert alert-danger border-0 mt-3">
                                 <i class="fas fa-exclamation-triangle mr-2"></i> Warning: Your map location is not set.
                                 <a href="{{ route('profile') }}" class="font-weight-bold">Set it here</a>.
                             </div>
@@ -100,7 +100,7 @@
         <!-- Bottom Section: Active Services Table -->
         <div class="row">
             <div class="col-12">
-                <div class="card shadow-sm border-0">
+                <div class="card border-0">
                     <div class="card-header bg-white border-bottom-0 pt-4 px-4">
                         <h4 class="mb-0">My Active Services</h4>
                     </div>
@@ -211,13 +211,13 @@
                                 if (newStatus === 'Available') {
                                     // Now is available, show "Mark Unavailable"
                                     toggleBtnHtml = `<button type="button"
-                                                                    onclick="toggleStatus(${id}, 'Unavailable')"
-                                                                    class="btn btn-sm btn-outline-warning border-0 font-weight-bold toggle-status-btn">Mark Unavailable</button>`;
+                                                                            onclick="toggleStatus(${id}, 'Unavailable')"
+                                                                            class="btn btn-sm btn-outline-warning border-0 font-weight-bold toggle-status-btn">Mark Unavailable</button>`;
                                 } else {
                                     // Now is unavailable, show "Mark Available"
                                     toggleBtnHtml = `<button type="button"
-                                                                    onclick="toggleStatus(${id}, 'Available')"
-                                                                    class="btn btn-sm btn-outline-success border-0 font-weight-bold toggle-status-btn">Mark Available</button>`;
+                                                                            onclick="toggleStatus(${id}, 'Available')"
+                                                                            class="btn btn-sm btn-outline-success border-0 font-weight-bold toggle-status-btn">Mark Available</button>`;
                                 }
 
                                 // We need to keep the delete button. The original structure was:
@@ -270,4 +270,5 @@
         </script>
     @endpush
 @endsection
+
 

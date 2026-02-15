@@ -118,7 +118,7 @@
                 </div>
             </div>
 
-            <div class="alert alert-info border-0 shadow-sm d-flex align-items-start" role="alert">
+            <div class="alert alert-info border-0 d-flex align-items-start" role="alert">
                 <i class="bi bi-info-circle-fill fs-5 me-3 flex-shrink-0"></i>
                 <div class="small">
                     <strong>Privacy Notice:</strong><br>Admin access is read-only for sensitive resident data to ensure
@@ -128,6 +128,4 @@
         </div>
     </div>
 @endsection
-
-
 

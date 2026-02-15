@@ -10,7 +10,7 @@
         </a>
     </div>
 
-    <div class="card shadow mb-4">
+    <div class="card mb-4">
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered">
@@ -73,4 +73,3 @@
         </div>
     </div>
 @endsection
-

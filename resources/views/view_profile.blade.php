@@ -84,10 +84,11 @@
                 @if($accomplishments->count() > 0)
                     <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 25px;">
                         @foreach($accomplishments as $item)
-                            <button type="button" style="flex: 0 0 auto; width: 150px; cursor: pointer; border: none; background: none; padding: 0;"
+                            <button type="button"
+                                style="flex: 0 0 auto; width: 150px; cursor: pointer; border: none; background: none; padding: 0;"
                                 onclick="openLightbox('{{ asset($item->image_path) }}', '{{ $item->caption }}')">
                                 <img src="{{ asset($item->image_path) }}" alt="Accomplishment"
-                                    style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.2s;">
+                                    style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; transition: transform 0.2s;">
                             </button>
                         @endforeach
                     </div>
@@ -103,7 +104,7 @@
                     style="position: absolute; top: 20px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; background: none; border: none; padding: 0; line-height: 1;">&times;</button>
                 <div style="text-align: center; max-width: 90%; max-height: 90%;">
                     <img id="lightboxImg" alt="Enlarged view"
-                        style="max-width: 100%; max-height: 80vh; border-radius: 4px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+                        style="max-width: 100%; max-height: 80vh; border-radius: 4px;">
                     <div id="lightboxCaption" style="color: #ccc; margin-top: 15px; font-size: 1.2rem;"></div>
                 </div>
             </div>
@@ -195,7 +196,7 @@
 
     @if (session('success'))
         <div
-            style="position: fixed; bottom: 20px; right: 20px; background: #007bff; color: white; padding: 15px 25px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); animation: fadeOut 5s forwards;">
+            style="position: fixed; bottom: 20px; right: 20px; background: #007bff; color: white; padding: 15px 25px; border-radius: 5px; animation: fadeOut 5s forwards;">
             {{ session('success') }}
         </div>
     @endif

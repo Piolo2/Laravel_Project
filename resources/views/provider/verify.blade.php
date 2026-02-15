@@ -114,7 +114,7 @@
     <div class="container py-4 py-md-5">
         <div class="row justify-content-center">
             <div class="col-md-8 col-12">
-                <div class="card shadow-sm" style="border: none; border-radius: 15px; overflow: hidden;">
+                <div class="card" style="border: none; border-radius: 15px; overflow: hidden;">
                     <div class="card-header bg-white border-bottom p-3 p-md-4">
                         <h2 class="h3 h2-md mb-4 fw-bold text-center" style="color: var(--primary-color, #007bff);">Verify
                             an Account</h2>
@@ -174,12 +174,13 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="contact_number">Contact No. <span class="text-danger">*</span></label>
-                                        <input type="text" name="contact_number" id="contact_number" class="form-control" required
-                                            value="{{ old('contact_number', $user->profile?->contact_number) }}">
+                                        <input type="text" name="contact_number" id="contact_number" class="form-control"
+                                            required value="{{ old('contact_number', $user->profile?->contact_number) }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="age">Age</label>
-                                        <input type="number" name="age" id="age" class="form-control" value="{{ old('age') }}">
+                                        <input type="number" name="age" id="age" class="form-control"
+                                            value="{{ old('age') }}">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="gender">Gender</label>
@@ -309,8 +310,10 @@
                                 </div>
 
                                 <div class="mb-3" id="certUpload" style="display: none;">
-                                    <label for="compliance_certificate_file">Upload proof of skills (Certificates, NC II, Training Records)</label>
-                                    <input type="file" name="compliance_certificate_file" id="compliance_certificate_file" class="form-control">
+                                    <label for="compliance_certificate_file">Upload proof of skills (Certificates, NC II,
+                                        Training Records)</label>
+                                    <input type="file" name="compliance_certificate_file" id="compliance_certificate_file"
+                                        class="form-control">
                                 </div>
 
                                 <hr class="my-4">
@@ -329,12 +332,16 @@
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label for="id_front_file">Upload ID (Front) <span class="text-danger">*</span></label>
-                                        <input type="file" name="id_front_file" id="id_front_file" class="form-control" required>
+                                        <label for="id_front_file">Upload ID (Front) <span
+                                                class="text-danger">*</span></label>
+                                        <input type="file" name="id_front_file" id="id_front_file" class="form-control"
+                                            required>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="id_back_file">Upload ID (Back) <span class="text-danger">*</span></label>
-                                        <input type="file" name="id_back_file" id="id_back_file" class="form-control" required>
+                                        <label for="id_back_file">Upload ID (Back) <span
+                                                class="text-danger">*</span></label>
+                                        <input type="file" name="id_back_file" id="id_back_file" class="form-control"
+                                            required>
                                     </div>
                                 </div>
 

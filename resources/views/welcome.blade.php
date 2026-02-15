@@ -31,7 +31,7 @@
         .main-card {
             background: white;
 
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+
             overflow: hidden;
             max-width: 900px;
             width: 100%;
@@ -159,6 +159,3 @@
 </body>
 
 </html>
-
-
-

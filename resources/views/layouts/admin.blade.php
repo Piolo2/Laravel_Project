@@ -79,7 +79,7 @@
                 </div>
                 <strong>{{ Auth::user()->username ?? 'Admin' }}</strong>
             </a>
-            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+            <ul class="dropdown-menu dropdown-menu-dark text-small" aria-labelledby="dropdownUser1">
                 <li>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
@@ -93,7 +93,7 @@
     <!-- Main Content -->
     <main class="main-content" data-barba="container" data-barba-namespace="admin">
         <!-- Header -->
-        <header class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm sticky-top px-4 py-3">
+        <header class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top px-4 py-3">
             <div class="container-fluid p-0">
                 <div class="d-flex align-items-center">
                     <h4 class="mb-0 fw-semibold text-secondary page-title">@yield('title')</h4>
@@ -109,14 +109,14 @@
 
         <div class="container-fluid p-4 content-area">
             @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show shadow-sm border-0" role="alert">
+                <div class="alert alert-success alert-dismissible fade show border-0" role="alert">
                     <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
 
             @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0" role="alert">
+                <div class="alert alert-danger alert-dismissible fade show border-0" role="alert">
                     <i class="bi bi-exclamation-circle-fill me-2"></i> {{ session('error') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
@@ -141,5 +141,3 @@
 </body>
 
 </html>
-
-

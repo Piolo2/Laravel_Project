@@ -201,7 +201,7 @@
     <div id="uploadModal" class="modal"
         style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5);">
         <div class="modal-content"
-            style="background-color: #fefefe; margin: 15% auto; padding: 25px; border: 1px solid #888; width: 90%; max-width: 500px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            style="background-color: #fefefe; margin: 15% auto; padding: 25px; border: 1px solid #888; width: 90%; max-width: 500px; position: relative;">
             <button type="button" onclick="document.getElementById('uploadModal').style.display='none'"
                 style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; border: none; background: none; padding: 0; line-height: 1;">&times;</button>
             <h3 style="color: var(--primary-color); margin-top: 0; margin-bottom: 20px;">Add Accomplishment</h3>

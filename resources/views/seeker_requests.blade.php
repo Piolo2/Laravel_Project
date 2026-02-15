@@ -11,10 +11,10 @@
 
         <div id="alert-container">
             @if (session('msg'))
-                <div class="alert alert-success shadow-sm border-0">{{ session('msg') }}</div>
+                <div class="alert alert-success border-0">{{ session('msg') }}</div>
             @endif
             @if (session('error'))
-                <div class="alert alert-danger shadow-sm border-0">{{ session('error') }}</div>
+                <div class="alert alert-danger border-0">{{ session('error') }}</div>
             @endif
         </div>
 

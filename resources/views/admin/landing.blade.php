@@ -8,27 +8,31 @@
     <div class="row g-4 mb-4">
         <!-- Stats Cards -->
         <div class="col-md-3">
-            <div class="card h-100 border-0 shadow-sm border-start border-4 border-primary">
+            <div class="card h-100 border-0">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <div class="text-uppercase fw-bold text-primary mb-1" style="font-size: 0.75rem;">Total Service Seekers</div>
+                            <div class="text-uppercase fw-bold mb-1" style="font-size: 0.75rem; color: #1e293b;">Total
+                                Service
+                                Seekers</div>
                             <div class="h5 mb-0 fw-bold text-gray-800">{{ $total_seekers }}</div>
                         </div>
-                        <i class="bi bi-search fa-2x text-primary opacity-50"></i>
+                        <i class="bi bi-search fa-2x opacity-50" style="color: #1e293b;"></i>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card h-100 border-0 shadow-sm border-start border-4 border-success">
+            <div class="card h-100 border-0">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                             <div class="text-uppercase fw-bold text-success mb-1" style="font-size: 0.75rem;">Total Service Providers</div>
+                            <div class="text-uppercase fw-bold mb-1" style="font-size: 0.75rem; color: #1e293b;">Total
+                                Service
+                                Providers</div>
                             <div class="h5 mb-0 fw-bold text-gray-800">{{ $total_residents }}</div>
                         </div>
-                        <i class="bi bi-house-door fa-2x text-success opacity-50"></i>
+                        <i class="bi bi-house-door fa-2x opacity-50" style="color: #1e293b;"></i>
                     </div>
                 </div>
             </div>
@@ -36,28 +40,31 @@
         <!-- Verified Providers Card -->
         <div class="col-md-3">
             <a href="{{ route('admin.users.index', ['role' => 'verified_provider']) }}" class="text-decoration-none">
-                <div class="card h-100 border-0 shadow-sm border-start border-4 border-info">
+                <div class="card h-100 border-0">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-uppercase fw-bold text-info mb-1" style="font-size: 0.75rem;">Verified Providers</div>
+                                <div class="text-uppercase fw-bold mb-1" style="font-size: 0.75rem; color: #1e293b;">
+                                    Verified
+                                    Providers</div>
                                 <div class="h5 mb-0 fw-bold text-gray-800">{{ $total_verified_providers }}</div>
                             </div>
-                            <i class="bi bi-patch-check fa-2x text-info opacity-50"></i>
+                            <i class="bi bi-patch-check fa-2x opacity-50" style="color: #1e293b;"></i>
                         </div>
                     </div>
                 </div>
             </a>
         </div>
         <div class="col-md-3">
-            <div class="card h-100 border-0 shadow-sm border-start border-4 border-warning">
+            <div class="card h-100 border-0">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <div class="text-uppercase fw-bold text-warning mb-1" style="font-size: 0.75rem;">Services Offered</div>
+                            <div class="text-uppercase fw-bold mb-1" style="font-size: 0.75rem; color: #1e293b;">Services
+                                Offered</div>
                             <div class="h5 mb-0 fw-bold text-gray-800">{{ $total_services }}</div>
                         </div>
-                        <i class="bi bi-tools fa-2x text-warning opacity-50"></i>
+                        <i class="bi bi-tools fa-2x opacity-50" style="color: #1e293b;"></i>
                     </div>
                 </div>
             </div>
@@ -67,7 +74,7 @@
     <!-- Analytics Section -->
     <div class="row mt-4">
         <div class="col-md-8">
-            <div class="card mb-4 shadow-sm border-0">
+            <div class="card mb-4 border-0">
                 <div class="card-header bg-white border-0 py-2 d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 text-muted fw-bold text-uppercase small">User Growth</h6>
                     <select class="form-select form-select-sm w-auto border-0 bg-light fw-bold text-muted"
@@ -86,7 +93,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card mb-4 shadow-sm border-0">
+            <div class="card mb-4 border-0">
                 <div class="card-header bg-white border-0 py-2 d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 text-muted fw-bold text-uppercase small">User Roles</h6>
                     <select class="form-select form-select-sm w-auto border-0 bg-light fw-bold text-muted"
@@ -108,7 +115,7 @@
 
     <div class="row">
         <div class="col-md-6">
-            <div class="card mb-4 shadow-sm border-0">
+            <div class="card mb-4 border-0">
                 <div class="card-header bg-white border-0 py-2 d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 text-muted fw-bold text-uppercase small">Request Status</h6>
                     <select class="form-select form-select-sm w-auto border-0 bg-light fw-bold text-muted"
@@ -129,7 +136,7 @@
 
         <!-- Skill Distribution (Existing) -->
         <div class="col-md-6">
-            <div class="card shadow-sm h-100 border-0">
+            <div class="card h-100 border-0">
                 <div class="card-header bg-white border-0 py-2">
                     <h6 class="mb-0 text-muted fw-bold text-uppercase small">Top Categories (All Time)</h6>
                 </div>
@@ -145,7 +152,7 @@
     <!-- Recent Users (Existing) -->
     <div class="row mt-4">
         <div class="col-12">
-            <div class="card shadow-sm border-0">
+            <div class="card border-0">
                 <div class="card-header bg-white border-0 py-2">
                     <h6 class="mb-0 text-muted fw-bold text-uppercase small">Recent Users</h6>
                 </div>
@@ -165,7 +172,7 @@
                                     <td>{{ $user->username }}</td>
                                     <td>
                                         @php
-                                            $roleDisplay = match($user->role) {
+                                            $roleDisplay = match ($user->role) {
                                                 'resident' => 'Service Provider',
                                                 'seeker' => 'Service Seeker',
                                                 default => ucfirst($user->role)
@@ -409,5 +416,3 @@
         });
     </script>
 @endpush
-
-

@@ -30,7 +30,7 @@
             <h2 class="text-center mb-5 fw-normal text-uppercase tracking-wider"
                 style="color: var(--primary-color); letter-spacing: 2px;">Announcements</h2>
 
-            <div id="announcementCarousel" class="carousel slide carousel-fade shadow-sm border" data-bs-ride="carousel"
+            <div id="announcementCarousel" class="carousel slide carousel-fade border" data-bs-ride="carousel"
                 data-bs-interval="3000"> <!-- Increased interval slightly for better read time -->
                 <div class="carousel-inner">
                     @foreach($announcements as $index => $announcement)
@@ -101,7 +101,7 @@
     @else
         <!-- Fallback or Hidden if no announcements -->
         <!-- Original Content optionally preserved if needed, but user asked to add announcements.
-                                                                                         If no announcements, showing nothing is safer than showing incorrect static data. -->
+                                                                                                 If no announcements, showing nothing is safer than showing incorrect static data. -->
     @endif
 
     <!-- How it Works -->
@@ -126,6 +126,4 @@
         </div>
     </section>
 @endsection
-
-
 

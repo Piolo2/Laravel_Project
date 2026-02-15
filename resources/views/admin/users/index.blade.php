@@ -124,7 +124,7 @@
                                 <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
                                     @csrf
                                     @method('PUT')
-                                    <div class="modal-content shadow">
+                                    <div class="modal-content">
                                         <div class="modal-header border-0 pb-0">
                                             <h5 class="modal-title">Edit User Role</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -178,4 +178,3 @@
         @endif
     </div>
 @endsection
-

@@ -10,7 +10,7 @@
         </a>
     </div>
 
-    <div class="card shadow mb-4">
+    <div class="card mb-4">
         <div class="card-body">
             <form action="{{ route('admin.announcements.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -58,4 +58,3 @@
         </div>
     </div>
 @endsection
-

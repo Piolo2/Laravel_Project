@@ -5,7 +5,7 @@
 @section('content')
     <div class="row g-4 mb-4">
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm h-100 bg-white">
+            <div class="card border-0 h-100 bg-white">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-2">
                         <div class="bg-primary bg-opacity-10 p-2 rounded text-primary me-3">
@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm h-100 bg-white">
+            <div class="card border-0 h-100 bg-white">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-2">
                         <div class="bg-info bg-opacity-10 p-2 rounded text-info me-3">
@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm h-100 bg-white">
+            <div class="card border-0 h-100 bg-white">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-2">
                         <div class="bg-warning bg-opacity-10 p-2 rounded text-warning me-3">
@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm h-100 bg-white">
+            <div class="card border-0 h-100 bg-white">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-2">
                         <div class="bg-success bg-opacity-10 p-2 rounded text-success me-3">
@@ -128,4 +128,3 @@
         </div>
     </div>
 @endsection
-

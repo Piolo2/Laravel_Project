@@ -11,7 +11,7 @@
             </a>
         </div>
 
-        <div class="card shadow-sm border rounded-0 overflow-hidden">
+        <div class="card border rounded-0 overflow-hidden">
             <div class="row g-0">
                 <div class="col-lg-5 bg-light d-flex align-items-center justify-content-center p-0">
                     @if($announcement->image_path)
@@ -84,5 +84,3 @@
         </div>
     </div>
 @endsection
-
-

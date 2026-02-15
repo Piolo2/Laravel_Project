@@ -16,7 +16,7 @@
                     $home_url = route('admin.dashboard');
             }
         @endphp
-        <a href="{{ $home_url }}">Home</a>
+        <a href="{{ $home_url }}" style="color: #0d2c52;">Home</a>
 
         @auth
             @if (Auth::user()->role === 'admin')
@@ -36,9 +36,8 @@
                     style="background: none; border: none; color: inherit; cursor: pointer; font: inherit;">Logout</button>
             </form>
         @else
-            <a href="{{ route('login') }}" style="color: var(--accent-blue);">Login</a>
-            <a href="{{ route('register') }}"
-                style="border: 2px solid var(--primary-color); padding: 5px 15px; margin-left:15px;">Register</a>
+            <a href="{{ route('login') }}" style="color: #0d2c52;">Login</a>
+            <a href="{{ route('register') }}" style="padding: 5px 15px; margin-left:15px; color: #0d2c52;">Register</a>
         @endauth
     </div>
     <div class="hamburger-menu">
@@ -62,5 +61,3 @@
         }
     });
 </script>
-
-
